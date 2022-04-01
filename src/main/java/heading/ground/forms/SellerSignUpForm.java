@@ -25,10 +25,13 @@ public class SellerSignUpForm {
     private String name; //가게 이름
 
     @Length(max = 13)
+    @NotBlank
     private String phoneNumber; //가게 전화번호
 
+    @Length(max = 256)
+    private String desc;
+
     @Email
-    @NotBlank
     private String email;
 
     public Seller toEntity(){
@@ -36,4 +39,14 @@ public class SellerSignUpForm {
         return seller;
     }
 
+    public SellerSignUpForm() {
+    }
+
+    public SellerSignUpForm(String loginId, String password, String name, String phoneNumber, String email) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 }

@@ -1,17 +1,17 @@
 package heading.ground.entity.user;
 
+import heading.ground.forms.SellerEditForm;
 import heading.ground.forms.SellerSignUpForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @Getter
+//@ToString
 public class Seller extends BaseUser{
 
     @Id @GeneratedValue
@@ -30,6 +30,8 @@ public class Seller extends BaseUser{
     @Embedded
     private Address address; //주소
 
+    //TODO 이미지 파일 추가
+    
     //가게 정보
     private String SellerId; //사업자 번호
 
@@ -37,12 +39,25 @@ public class Seller extends BaseUser{
 
     private boolean isAdmin;
 
+    @Column(columnDefinition = "text")
+    private String desc;
+
     public Seller(SellerSignUpForm sf) {
         this.loginId = sf.getLoginId();
         this.password = sf.getPassword();
         this.name = sf.getName();
         this.phoneNumber = sf.getPhoneNumber();
         this.email = sf.getEmail();
+        this.desc = sf.getDesc();
         this.isAdmin = true;
+    }
+
+    public void update(SellerEditForm form){
+        this.name = form.getName();
+        this.phoneNumber = form.getPhoneNumber();
+        this.seats = form.getSeats();
+        this.desc = form.getDesc();
+        this.email = form.getEmail();
+        this.SellerId = form.getSellerId();
     }
 }

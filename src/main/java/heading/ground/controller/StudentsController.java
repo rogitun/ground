@@ -47,7 +47,7 @@ public class StudentsController {
         if(user!=null){
             log.info("pass");
             HttpSession session = request.getSession();
-            session.setAttribute("user",session);
+            session.setAttribute("user",user);
             return "redirect:/"; //홈화면 이동
         }
 

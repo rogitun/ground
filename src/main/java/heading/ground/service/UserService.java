@@ -3,10 +3,12 @@ package heading.ground.service;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
 import heading.ground.entity.user.Student;
+import heading.ground.forms.SellerEditForm;
 import heading.ground.repository.SellerRepository;
 import heading.ground.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,5 +35,13 @@ public class UserService {
                 return seller;
         }
         return null;
+    }
+
+    @Transactional
+    public Seller updateSeller(Long id, SellerEditForm form){
+        Seller seller = sellerRepository.findById(id).get();
+        seller.update(form);
+
+        return seller;
     }
 }
