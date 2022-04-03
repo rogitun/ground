@@ -2,9 +2,9 @@ package heading.ground.controller;
 
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Student;
-import heading.ground.forms.StudentForm;
-import heading.ground.forms.LoginForm;
-import heading.ground.repository.StudentRepository;
+import heading.ground.forms.user.StudentForm;
+import heading.ground.forms.user.LoginForm;
+import heading.ground.repository.user.StudentRepository;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

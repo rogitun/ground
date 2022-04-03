@@ -1,12 +1,14 @@
 package heading.ground.entity.user;
 
-import heading.ground.forms.SellerEditForm;
-import heading.ground.forms.SellerSignUpForm;
+import heading.ground.entity.post.Menu;
+import heading.ground.forms.user.SellerEditForm;
+import heading.ground.forms.user.SellerSignUpForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +18,6 @@ public class Seller extends BaseUser{
 
     @Id @GeneratedValue
     private Long id;
-
 
     private String loginId;
     private String password;
@@ -42,6 +43,10 @@ public class Seller extends BaseUser{
     @Column(columnDefinition = "text")
     private String desc;
 
+    //가게가 가진 메뉴를 연관
+    @OneToMany(mappedBy = "seller",cascade = CascadeType.REMOVE)
+    private List<Menu> menus = new ArrayList<>();
+
     public Seller(SellerSignUpForm sf) {
         this.loginId = sf.getLoginId();
         this.password = sf.getPassword();
@@ -60,4 +65,6 @@ public class Seller extends BaseUser{
         this.email = form.getEmail();
         this.SellerId = form.getSellerId();
     }
+
+
 }

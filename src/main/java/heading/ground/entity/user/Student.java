@@ -1,6 +1,6 @@
 package heading.ground.entity.user;
 
-import heading.ground.forms.StudentForm;
+import heading.ground.forms.user.StudentForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,4 +1,4 @@
-package heading.ground.forms;
+package heading.ground.forms.user;
 
 import heading.ground.entity.user.Address;
 import heading.ground.entity.user.Seller;

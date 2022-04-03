@@ -1,4 +1,4 @@
-package heading.ground.repository;
+package heading.ground.repository.user;
 
 import heading.ground.entity.user.Student;
 import org.springframework.data.jpa.repository.JpaRepository;

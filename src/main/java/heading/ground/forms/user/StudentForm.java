@@ -1,4 +1,4 @@
-package heading.ground.forms;
+package heading.ground.forms.user;
 
 import heading.ground.entity.user.Student;
 import lombok.Data;

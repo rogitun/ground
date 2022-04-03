@@ -1,14 +1,16 @@
 package heading.ground.controller;
 
-import heading.ground.dto.AccountDto;
-import heading.ground.entity.user.Address;
+import heading.ground.dto.SellerDto;
+import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
-import heading.ground.entity.user.Student;
-import heading.ground.forms.LoginForm;
-import heading.ground.forms.SellerEditForm;
-import heading.ground.forms.SellerSignUpForm;
-import heading.ground.repository.SellerRepository;
+import heading.ground.forms.post.MenuForm;
+import heading.ground.forms.user.LoginForm;
+import heading.ground.forms.user.SellerEditForm;
+import heading.ground.forms.user.SellerSignUpForm;
+import heading.ground.repository.post.MenuRepository;
+import heading.ground.repository.user.SellerRepository;
+import heading.ground.service.PostService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,7 +29,9 @@ import javax.servlet.http.HttpSession;
 public class SellerController {
 
     private final SellerRepository sellerRepository;
+    private final MenuRepository menuRepository;
     private final UserService userService;
+    private final PostService postService;
 
     @GetMapping("/login")
     public String loginForm(Model model){
@@ -66,11 +71,17 @@ public class SellerController {
     }
 
     @GetMapping("/account")     //가게 정보로 가는 메서드
-    public String account(Model model, @SessionAttribute(name = "user",required = false) BaseUser seller){
+    public String account(Model model, @SessionAttribute(name = "user",required = false) BaseUser sessionSeller){
 
-        AccountDto accountDto = new AccountDto((Seller) seller);
-        model.addAttribute("account",accountDto);
-        model.addAttribute("accountId",((Seller) seller).getId());
+        Seller seller = (Seller) sessionSeller;
+        Seller sellerEntity = sellerRepository.findById(seller.getId()).get();
+        SellerDto sellerDto = new SellerDto(sellerEntity);
+
+        List<Menu> menus = menuRepository.findBySellerId(seller.getId());
+
+        model.addAttribute("menus",menus);
+        model.addAttribute("account", sellerDto);
+        model.addAttribute("accountId",seller.getId());
         return "/user/account";
     }
 
@@ -100,6 +111,26 @@ public class SellerController {
         HttpSession session = request.getSession();
         session.removeAttribute("user");
         session.setAttribute("user",updatedSeller);
+
+        return "redirect:/seller/account";
+    }
+
+    @GetMapping("/add-menu")
+    public String menuForm(Model model){ //메뉴 폼
+        model.addAttribute("menu",new MenuForm());
+        return "post/menuForm";
+    }
+
+    @PostMapping("/add-menu")
+    public String addMenu(@Validated @ModelAttribute("menu") MenuForm form,BindingResult bindingResult,
+                          @SessionAttribute(name = "user",required = false) BaseUser seller){ //메뉴 폼
+        if(bindingResult.hasErrors()){
+            return "post/menuForm";
+        }
+        Menu menu = form.toEntity();
+        Seller se = (Seller) seller;
+        Menu save = menuRepository.save(menu);
+        postService.addMenu(save,se);
 
         return "redirect:/seller/account";
     }
