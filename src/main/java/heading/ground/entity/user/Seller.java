@@ -5,6 +5,7 @@ import heading.ground.forms.user.SellerEditForm;
 import heading.ground.forms.user.SellerSignUpForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ public class Seller extends BaseUser{
     @Embedded
     private Address address; //주소
 
+//    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+//    private ImageFile imageFile;
+
+    @Column(length = 64)
+    private String photo;
     //TODO 이미지 파일 추가
     
     //가게 정보
@@ -64,6 +70,7 @@ public class Seller extends BaseUser{
         this.desc = form.getDesc();
         this.email = form.getEmail();
         this.SellerId = form.getSellerId();
+        this.photo = StringUtils.cleanPath(form.getImageFile().getOriginalFilename());
     }
 
 

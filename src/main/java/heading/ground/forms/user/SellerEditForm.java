@@ -1,8 +1,10 @@
 package heading.ground.forms.user;
 
+import heading.ground.entity.ImageFile;
 import heading.ground.entity.user.Seller;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -22,6 +24,8 @@ public class SellerEditForm {
     @Length(max = 256)
     @NotBlank
     private String desc;
+
+    private MultipartFile imageFile;
 
     @Email
     private String email;
