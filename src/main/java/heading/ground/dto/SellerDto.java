@@ -1,10 +1,10 @@
 package heading.ground.dto;
 
+import heading.ground.entity.ImageFile;
 import heading.ground.entity.user.Address;
 import heading.ground.entity.user.Seller;
 import lombok.Data;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +39,7 @@ public class SellerDto {
         this.sellerId = seller.getSellerId();
         this.email = seller.getEmail();
         this.desc = seller.getDesc();
-        this.photo = seller.getPhoto();
+        photoCheck(seller.getImageFile());
         if(seller.getMenus().size()>0) {
             menus = seller.getMenus()
                     .stream()
@@ -48,9 +48,15 @@ public class SellerDto {
         }
     }
 
-    public String getPhotoPath(){
-        if(photo==null) return null;
-
-        return "/src/main/resources/static/files/" + id + "/" + photo;
+    public void photoCheck(ImageFile temp){
+        if(temp==null){
+            return;
+        }
+        this.photo = temp.getStoreName();
     }
+
+//    public String getPhotoPath(){
+//        if(photo==null) return null;
+//        return "C:/Users/kunyj/Desktop/스프링토이프로젝트/headingToGround/ground/src/main/resources/static/files/" + photo;
+//    }
 }

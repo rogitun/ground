@@ -27,6 +27,8 @@ public class SellerEditForm {
 
     private MultipartFile imageFile;
 
+    private String image_present;
+
     @Email
     private String email;
 
@@ -44,5 +46,7 @@ public class SellerEditForm {
         this.desc = seller.getDesc();
         this.email = seller.getEmail();
         this.sellerId = seller.getSellerId();
+        if(seller.getImageFile()!=null)
+            this.image_present = seller.getImageFile().getOriginName();
     }
 }

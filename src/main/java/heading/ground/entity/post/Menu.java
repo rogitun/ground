@@ -1,5 +1,6 @@
 package heading.ground.entity.post;
 
+import heading.ground.entity.ImageFile;
 import heading.ground.entity.user.Seller;
 import heading.ground.forms.post.MenuForm;
 import lombok.Getter;
@@ -30,22 +31,33 @@ public class Menu extends base {
 
     private int quantity;
 
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private ImageFile image;
+
     //메뉴가 소속된 가게
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
     public Menu(MenuForm form) {
-        this.name = form.getName();
-        this.price = form.getPrice();
-        this.desc = form.getDesc();
-        this.sources = form.getSources();
-        this.quantity = form.getQuantity();
+        updateField(form);
     }
 
     public void addSeller(Seller seller){
         this.seller = seller;
         seller.getMenus().add(this);
+    }
+
+    public void addImage(ImageFile image){
+        this.image = image;
+    }
+
+    public void updateField(MenuForm form){
+        this.name = form.getName();
+        this.price = form.getPrice();
+        this.desc = form.getDesc();
+        this.sources = form.getSources();
+        this.quantity = form.getQuantity();
     }
 
 }

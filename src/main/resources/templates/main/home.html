@@ -51,8 +51,8 @@
           <div class="dev">
             <a href="/profile.html" class="card__body">
               <div class="dev__profile">
-                <img class="avatar avatar--md" th:if="${s.photo}" th:src="@{${s.photoPath}}"/>
-                <img class="avatar avatar--md" th:unless="${s.photo}" th:src="@{images/user.png}"/>
+                <img class="avatar avatar--md" th:if="${s.photo}" th:src="|/image/${s.photo}|"/>
+                <img class="avatar avatar--md" th:unless="${s.photo}" th:src="@{/images/user.png}"/>
                 <div class="dev__meta">
                   <h3 th:text="${s.name}">가게이름</h3>
                   <h5 th:text="${s.phoneNumber}">가게 번호</h5>

@@ -1,13 +1,12 @@
 package heading.ground.controller;
 
+import heading.ground.dto.MenuDto;
 import heading.ground.dto.SellerDto;
-import heading.ground.entity.ImageFile;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
 import heading.ground.file.FileStore;
-import heading.ground.file.FileUploadUtil;
-import heading.ground.file.fileRepository;
+import heading.ground.file.FileRepository;
 import heading.ground.forms.post.MenuForm;
 import heading.ground.forms.user.LoginForm;
 import heading.ground.forms.user.SellerEditForm;
@@ -17,20 +16,23 @@ import heading.ground.repository.user.SellerRepository;
 import heading.ground.service.PostService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/seller")
@@ -42,7 +44,7 @@ public class SellerController {
     private final PostService postService;
 
     private final FileStore fileStore;
-    private final fileRepository fileRepository;
+    private final FileRepository fileRepository;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -89,8 +91,11 @@ public class SellerController {
         SellerDto sellerDto = new SellerDto(sellerEntity);
 
         List<Menu> menus = menuRepository.findBySellerId(seller.getId());
+        List<MenuDto> menuDto = menus.stream()
+                .map(m -> new MenuDto(m))
+                .collect(Collectors.toList());
 
-        model.addAttribute("menus", menus);
+        model.addAttribute("menus", menuDto);
         model.addAttribute("account", sellerDto);
         //model.addAttribute("accountId", seller.getId());
         return "/user/account";
@@ -117,19 +122,13 @@ public class SellerController {
             return "user/edit-account";
         }
         //파일처리 TODO 파일 이름 UUID로 수정
+        //TODO 사진이 다르면 기존의 사진 delete
 
-        MultipartFile multipartFile = form.getImageFile();
-        //String fileName = toUUID(multipartFile);
-        String fileName = multipartFile.getOriginalFilename();
-
-
-        //가게 데이터 변경 처리
+        //가게 데이터 변경 처리 + 파일처리
         Seller seller = (Seller) ses; //변경 감지로 데이터 변경
         Seller updatedSeller = userService.updateSeller(seller.getId(), form);
 
-        //파일 저장소에 저장
-        String uploadDir = "src/main/resources/static/files/" + updatedSeller.getId();
-        FileUploadUtil.saveFile(uploadDir,fileName,multipartFile);
+        log.info("controller_ seller = {}", seller.getImageFile());
 
         //세션 업데이트
         HttpSession session = request.getSession();
@@ -138,33 +137,5 @@ public class SellerController {
 
         return "redirect:/seller/account";
     }
-
-    @GetMapping("/add-menu")
-    public String menuForm(Model model) { //메뉴 폼
-        model.addAttribute("menu", new MenuForm());
-        return "post/menuForm";
-    }
-
-    @PostMapping("/add-menu")
-    public String addMenu(@Validated @ModelAttribute("menu") MenuForm form, BindingResult bindingResult,
-                          @SessionAttribute(name = "user", required = false) BaseUser seller) { //메뉴 폼
-        if (bindingResult.hasErrors()) {
-            return "post/menuForm";
-        }
-        Menu menu = form.toEntity();
-        Seller se = (Seller) seller;
-        Menu save = menuRepository.save(menu);
-        postService.addMenu(save, se);
-
-        return "redirect:/seller/account";
-    }
-
-    private String toUUID(MultipartFile multipartFile) {
-        int pos = multipartFile.getOriginalFilename().lastIndexOf(".");//확장자까지 찾기
-        String ext = multipartFile.getOriginalFilename().substring(pos); //확장자
-        String fileName = UUID.randomUUID().toString();
-        return fileName + ext;
-    }
-
 
 }

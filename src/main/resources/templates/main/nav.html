@@ -18,7 +18,7 @@
             </label>
             <ul class="header__menu">
                 <li class="header__menuItem" ><a href="index.html">가게정보</a></li>
-                <li class="header__menuItem" th:if="${session.user != null}"><a href="projects.html">메뉴정보</a></li>
+                <li class="header__menuItem" ><a th:href="@{/menus}">메뉴정보</a></li>
                 <li class="header__menuItem" th:if="${session.user != null}"><a href="inbox.html">메세지</a></li>
                 <li class="header__menuItem" th:if="${session.user != null}"><a th:href="@{/seller/account}">내 정보</a></li>
                 <li class="header__menuItem" th:if="${session.user == null}"><a th:href="@{/login}" class="btn btn--sub">Login/Sign Up</a></li>

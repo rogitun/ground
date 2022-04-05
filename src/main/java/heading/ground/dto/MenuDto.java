@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class MenuDto {
 
+    private Long id;
     private String name; //음식 이름
     private int price; //음식 가격
 
@@ -19,12 +20,19 @@ public class MenuDto {
     //메뉴가 소속된 가게
     private String seller;
 
+    //storeName으로 저장 -> uuid이름
+    private String image;
+
     public MenuDto(Menu menu) {
+        this.id = menu.getId();
         this.name = menu.getName();
         this.price = menu.getPrice();
         this.desc = menu.getDesc();
         this.sources = menu.getSources();
         this.quantity = menu.getQuantity();
-        this.seller = menu.getSeller().getSellerId();
+        this.seller = menu.getSeller().getName();
+        if(menu.getImage()!=null){
+            this.image = menu.getImage().getStoreName();
+        }
     }
 }
