@@ -1,10 +1,15 @@
 package heading.ground.controller;
 
+import heading.ground.dto.CommentDto;
 import heading.ground.dto.MenuDto;
+import heading.ground.entity.post.Comment;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
+import heading.ground.entity.user.Student;
+import heading.ground.forms.post.CommentForm;
 import heading.ground.forms.post.MenuForm;
+import heading.ground.repository.post.CommentRepository;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +19,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 //메뉴, 댓글, 리뷰 등을 관리합니다.
@@ -31,9 +40,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/menus")
 @RequiredArgsConstructor
 public class PostController {
-
     private final MenuRepository menuRepository;
     private final PostService postService;
+    private final CommentRepository commentRepository;
+
 
     @GetMapping
     public String menuList(Model model) {
@@ -69,19 +79,66 @@ public class PostController {
     public String editForm(@PathVariable("id") Long id, Model model) {
         Menu menu = menuRepository.findById(id).get();
         MenuForm form = new MenuForm(menu);
-        model.addAttribute("menu",form);
+        model.addAttribute("menu", form);
 
         return "post/menuForm";
     }
 
     @PostMapping("/{id}/edit")
-    public String editMenu(@Validated @ModelAttribute("menu") MenuForm form,BindingResult bindingResult,
+    public String editMenu(@Validated @ModelAttribute("menu") MenuForm form, BindingResult bindingResult,
                            @PathVariable("id") Long id) throws IOException {
         Menu menu = menuRepository.findById(id).get();
-        postService.updateMenu(menu,form);
-
+        postService.updateMenu(menu, form);
         return "redirect:/seller/account";
     }
 
+    @GetMapping("/{id}")
+    public String singleMenu(@PathVariable("id") Long id, Model model,
+                             HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Object user = session.getAttribute("user");
+        CommentForm commentForm = new CommentForm();
+        if (user instanceof Student)
+            commentForm.setStudent(true);
 
+        Menu entity = menuRepository.findById(id).get();
+        MenuDto menu = new MenuDto(entity);
+
+        //댓글 목록 가져오기
+        List<Comment> comments = commentRepository.findByMenuId(entity.getId());
+        if (comments != null) {
+            List<CommentDto> commentDtos = comments.stream()
+                    .map(c -> new CommentDto(c))
+                    .collect(Collectors.toList());
+            model.addAttribute("comments",commentDtos);
+        }
+
+        model.addAttribute("menu", menu);
+        model.addAttribute("sellerId", entity.getSeller().getId());
+        model.addAttribute("comment", commentForm);
+        return "post/menu";
+    }
+
+    //TODO 댓글 고려사항
+
+    /**
+     * 1. 댓글은 메뉴와 사용자의 연관관계를 가진다.
+     * 2. 댓글과 메뉴는 M:1 / 사용자도 M:1
+     */
+    @PostMapping("/{id}")
+    public String addComment(@PathVariable("id") Long id,
+                             @Validated @ModelAttribute("comment") CommentForm form,
+                             BindingResult bindingResult,
+                             @SessionAttribute("user") BaseUser sei) {
+        log.info("form = {}", form);
+        if (bindingResult.hasErrors()) {
+            log.info("result = {} ", bindingResult.toString());
+            return "redirect:/menus/" + id;
+        }
+        Student student = (Student) sei;
+        Comment comment = new Comment(form);
+        postService.addComment(student.getId(), comment, id);
+
+        return "redirect:/menus/" + id;
+    }
 }

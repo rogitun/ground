@@ -19,6 +19,7 @@ import java.util.List;
 public class Menu extends base {
 
     @Id @GeneratedValue
+    @Column(name = "menu_id")
     private Long id;
     
     private String name; //음식 이름
@@ -38,6 +39,10 @@ public class Menu extends base {
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private Seller seller;
+
+    @OneToMany(mappedBy = "menu",cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
 
     public Menu(MenuForm form) {
         updateField(form);

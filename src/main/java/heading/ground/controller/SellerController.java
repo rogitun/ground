@@ -7,7 +7,6 @@ import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
 import heading.ground.file.FileStore;
 import heading.ground.file.FileRepository;
-import heading.ground.forms.post.MenuForm;
 import heading.ground.forms.user.LoginForm;
 import heading.ground.forms.user.SellerEditForm;
 import heading.ground.forms.user.SellerSignUpForm;
@@ -17,8 +16,6 @@ import heading.ground.service.PostService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,10 +37,6 @@ public class SellerController {
     private final SellerRepository sellerRepository;
     private final MenuRepository menuRepository;
     private final UserService userService;
-    private final PostService postService;
-
-    private final FileStore fileStore;
-    private final FileRepository fileRepository;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -136,6 +128,15 @@ public class SellerController {
         session.setAttribute("user", updatedSeller);
 
         return "redirect:/seller/account";
+    }
+
+    @GetMapping("/{id}")
+    public String sellerInfo(@PathVariable("id") Long id,Model model){
+        Seller seller = sellerRepository.findById(id).get();
+        SellerDto sellerDto = new SellerDto(seller);
+        model.addAttribute("seller",sellerDto);
+
+        return "user/seller";
     }
 
 }

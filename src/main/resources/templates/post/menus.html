@@ -49,7 +49,7 @@
         <div class="grid grid--three">
           <div class="column" th:each="m : ${menus}">
             <div class="card project">
-              <a href="single-project.html" class="project">
+              <a th:href="@{/menus/{id}(id=${m.id})}" class="project">
                 <img class="project__thumbnail" th:if="${m.image}" th:src="|/image/${m.image}|" />
                 <img class="project__thumbnail" th:unless="${m.image}" th:src="@{/images/default_food.png}" />
                 <div class="card__body">
