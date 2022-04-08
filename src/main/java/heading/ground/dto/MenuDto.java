@@ -15,10 +15,11 @@ public class MenuDto {
 
     private String sources;//음식에 들어가는 재료, 굳이 엔티로 뽑을 필요 없음
 
-    private int quantity;
-
     //메뉴가 소속된 가게
     private String seller;
+
+    private int commentNumber;
+    private int star;
 
     //storeName으로 저장 -> uuid이름
     private String image;
@@ -29,10 +30,12 @@ public class MenuDto {
         this.price = menu.getPrice();
         this.desc = menu.getDesc();
         this.sources = menu.getSources();
-        this.quantity = menu.getQuantity();
         this.seller = menu.getSeller().getName();
+        this.star = menu.getStar();
+        this.commentNumber = menu.getCommentNumber();
         if(menu.getImage()!=null){
             this.image = menu.getImage().getStoreName();
         }
+
     }
 }

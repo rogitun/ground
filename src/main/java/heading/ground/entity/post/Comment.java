@@ -43,6 +43,8 @@ public class Comment extends base{
         student.getComments().add(this);
         menu.getComments().add(this);
         this.writer = student;
+        menu.addStar(star);
         this.menu = menu;
+
     }
 }

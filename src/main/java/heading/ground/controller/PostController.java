@@ -2,6 +2,7 @@ package heading.ground.controller;
 
 import heading.ground.dto.CommentDto;
 import heading.ground.dto.MenuDto;
+import heading.ground.dto.Paging;
 import heading.ground.entity.post.Comment;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
@@ -14,18 +15,19 @@ import heading.ground.repository.post.MenuRepository;
 import heading.ground.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 //메뉴, 댓글, 리뷰 등을 관리합니다.
@@ -46,14 +48,14 @@ public class PostController {
 
 
     @GetMapping
-    public String menuList(Model model) {
-        List<Menu> all = menuRepository.findAll();
-        List<MenuDto> menuDto = all.stream()
-                .map(a -> new MenuDto(a))
-                .collect(Collectors.toList());
+    public String menuList(Model model, Pageable pageable) {
+        int page = (pageable.getPageNumber()==0)? 0: (pageable.getPageNumber()-1);
+        Page<MenuDto> all = postService.page(page, 9);//현재 인덱스, 보여줄 객체 갯수
+        Paging paging = postService.pageTemp(all);
 
-        log.info("menu list = {}", all.size());
-        model.addAttribute("menus", menuDto);
+        model.addAttribute("menus", all);
+        model.addAttribute("paging",paging);
+       // model.addAttribute("paging",paging);
         return "post/menus";
     }
 
@@ -116,6 +118,8 @@ public class PostController {
         model.addAttribute("menu", menu);
         model.addAttribute("sellerId", entity.getSeller().getId());
         model.addAttribute("comment", commentForm);
+
+        log.info("menu-comment-size-on-page = {}",entity.getComments().size());
         return "post/menu";
     }
 
@@ -141,4 +145,20 @@ public class PostController {
 
         return "redirect:/menus/" + id;
     }
+
+    @GetMapping("/del/{id}")
+    public String delCommentForm(@PathVariable("id") Long id,Model model){
+        Comment comment = commentRepository.findById(id).get();
+        CommentDto commentDto = new CommentDto(comment);
+        model.addAttribute("del",commentDto);
+
+        return "post/delete";
+    }
+
+    @PostMapping("/del/{id}")
+    public String delComment(@PathVariable("id") Long id){
+        commentRepository.deleteById(id);
+        return "redirect:/menus";
+    }
+
 }

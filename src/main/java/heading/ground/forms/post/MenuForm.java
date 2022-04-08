@@ -27,8 +27,6 @@ public class MenuForm {
 
     private String image_name;
     private MultipartFile image;
-    //하루 제한 수량
-    private int quantity;
 
     public MenuForm() {
     }
@@ -43,12 +41,11 @@ public class MenuForm {
     }
 
     //TODO 테스트용 -> 배포시 삭제
-    public MenuForm(String name, int price, String desc, String sources, int quantity) {
+    public MenuForm(String name, int price, String desc, String sources) {
         this.name = name;
         this.price = price;
         this.desc = desc;
         this.sources = sources;
-        this.quantity = quantity;
     }
 
     public Menu toEntity(){

@@ -24,15 +24,19 @@ public class TestData {
 
     @PostConstruct
     public void init(){
-        StudentForm s = new StudentForm("kunyjf","1234","1234","test","test@naver.com",false);
-        SellerSignUpForm se = new SellerSignUpForm("test", "1234", "Test_KFC", "02-000-000", "eee@eee.com");
-        Menu menu = new MenuForm("김치전", 4500, "막걸리와 함께", "김치랑 밀가루", 20).toEntity();
-        Seller seller = se.toEntity();
-        Student student = s.toEntity();
-        seu.save(seller);
 
-        menu.addSeller(seller);
-        mu.save(menu);
-        su.save(student);
+        for(int i=0;i<70;i++){
+            StudentForm s = new StudentForm("kunyjf"+i,"1234","1234","test_"+i,"test@naver.com",false);
+            SellerSignUpForm se = new SellerSignUpForm("test"+i, "1234", i+"_Test_KFC", "02-000-000", "eee@eee.com");
+            Menu menu = new MenuForm("김치전_"+i, 4500, "막걸리와 함께", "김치랑 밀가루").toEntity();
+            Seller seller = se.toEntity();
+            Student student = s.toEntity();
+
+            seu.save(seller);
+            menu.addSeller(seller);
+            mu.save(menu);
+            su.save(student);
+        }
+
     }
 }

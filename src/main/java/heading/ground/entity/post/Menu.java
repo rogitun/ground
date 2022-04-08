@@ -30,7 +30,9 @@ public class Menu extends base {
     @Column(columnDefinition = "text")
     private String sources;//음식에 들어가는 재료, 굳이 엔티로 뽑을 필요 없음
 
-    private int quantity;
+    private int commentNumber;
+
+    private int star;
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private ImageFile image;
@@ -62,7 +64,10 @@ public class Menu extends base {
         this.price = form.getPrice();
         this.desc = form.getDesc();
         this.sources = form.getSources();
-        this.quantity = form.getQuantity();
+    }
+
+    public void addStar(int num) {
+        star+=num; commentNumber++;
     }
 
 }

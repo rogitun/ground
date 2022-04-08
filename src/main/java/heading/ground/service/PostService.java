@@ -1,5 +1,7 @@
 package heading.ground.service;
 
+import heading.ground.dto.MenuDto;
+import heading.ground.dto.Paging;
 import heading.ground.entity.ImageFile;
 import heading.ground.entity.post.Comment;
 import heading.ground.entity.post.Menu;
@@ -13,6 +15,8 @@ import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.repository.user.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,5 +71,15 @@ public class PostService {
         Student student = studentRepository.findById(studentId).get();
         comment.setRelations(student,menu);
         commentRepository.save(comment);
+    }
+
+    public Page<MenuDto> page(int s, int n) {
+        PageRequest pageRequest = PageRequest.of(s,n);
+        Page<Menu> all = menuRepository.findAll(pageRequest);
+        return all.map(a -> new MenuDto(a));
+    }
+
+    public Paging pageTemp(Page<MenuDto> page){
+        return new Paging(page.getTotalPages(), page.getNumber());
     }
 }

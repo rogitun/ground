@@ -64,13 +64,6 @@
                         <div class="field-error" th:errors="*{desc}"></div>
                     </div>
                     <div class="form__field">
-                        <label for="formInput#text">하루 제한 수량 </label>
-                        <textarea class="input input--text" id="formInput#text" type="text" name="text" th:field="*{quantity}"
-                                  style="resize: none;"
-                               placeholder="제한 수량을 입력해주세요." th:value="*{quantity}"/>
-                        <div class="field-error" th:errors="*{quantity}"></div>
-                    </div>
-                    <div class="form__field">
                         <label for="formInput#text">음식 사진 </label>
                         <input class="input input--text" type="file" name="image" th:field="*{image}"
                                style="resize: none;"
