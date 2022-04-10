@@ -1,10 +1,13 @@
 package heading.ground.controller;
 
+import heading.ground.dto.StudentDto;
+import heading.ground.entity.book.Book;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Student;
 import heading.ground.forms.user.StudentForm;
 import heading.ground.forms.user.LoginForm;
 import heading.ground.repository.user.StudentRepository;
+import heading.ground.service.BookService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -28,6 +30,7 @@ public class StudentsController {
 
     private final StudentRepository studentRepository;
     private final UserService userService;
+    private final BookService bookService;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("user") LoginForm studentLoginForm){
@@ -95,5 +98,23 @@ public class StudentsController {
         studentRepository.save(student);
         return "redirect:/user/login";
     }
+
+    @GetMapping("/student/profile")
+    public String myProfile(Model model,
+                            @SessionAttribute("user") BaseUser user){
+        Student session = (Student) user;
+        Student student = studentRepository.findById(session.getId()).get();
+        StudentDto studentDto = new StudentDto(student.getName(), student.getEmail());
+        
+        model.addAttribute("student",studentDto);
+        
+        //내 예약 현황 가져오기
+        //보여줄거 가게이름 + 가격 + 예약 날짜 + 처리 상태
+        List<Book> books = bookService.findBooks(session.getId());
+        model.addAttribute("books",books);
+
+        return "user/student";
+    }
+
 
 }

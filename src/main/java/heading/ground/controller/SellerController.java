@@ -2,16 +2,20 @@ package heading.ground.controller;
 
 import heading.ground.dto.MenuDto;
 import heading.ground.dto.SellerDto;
+import heading.ground.entity.book.BookedMenu;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
+import heading.ground.entity.user.Student;
 import heading.ground.file.FileStore;
 import heading.ground.file.FileRepository;
+import heading.ground.forms.book.BookForm;
 import heading.ground.forms.user.LoginForm;
 import heading.ground.forms.user.SellerEditForm;
 import heading.ground.forms.user.SellerSignUpForm;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
+import heading.ground.service.BookService;
 import heading.ground.service.PostService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +29,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,6 +44,7 @@ public class SellerController {
     private final SellerRepository sellerRepository;
     private final MenuRepository menuRepository;
     private final UserService userService;
+    private final BookService bookService;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -131,12 +139,38 @@ public class SellerController {
     }
 
     @GetMapping("/{id}")
-    public String sellerInfo(@PathVariable("id") Long id,Model model){
+    public String sellerInfo(@PathVariable("id") Long id, Model model) {
         Seller seller = sellerRepository.findById(id).get();
         SellerDto sellerDto = new SellerDto(seller);
-        model.addAttribute("seller",sellerDto);
+        model.addAttribute("seller", sellerDto);
 
         return "user/seller";
+    }
+
+    @GetMapping("/{id}/book")
+    public String bookForm(@PathVariable("id") Long id, Model model,
+                           @SessionAttribute("user") BaseUser std) {
+        if (!(std instanceof Student)) {
+            return "redirect:/seller/" + id;
+        }
+
+        List<String> menus = menuRepository.selectNameBySeller(id);
+        model.addAttribute("form", menus);
+        return "/book/bookForm";
+    }
+
+    @PostMapping("/{id}/book")
+    public String addBook(@PathVariable("id") Long id
+            , @RequestParam HashMap<String, String> all,
+                          @SessionAttribute("user") BaseUser std) {
+        List<BookedMenu> bookMenus = bookService.createBookMenus(all);
+
+        Student student = (Student) std;
+
+
+        bookService.createBook(bookMenus, student.getId(), id);
+
+        return "redirect:/";
     }
 
 }

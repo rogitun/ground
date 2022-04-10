@@ -1,22 +1,21 @@
 package heading.ground.entity.post;
 
 import heading.ground.entity.ImageFile;
+import heading.ground.entity.Base;
+import heading.ground.entity.book.BookedMenu;
 import heading.ground.entity.user.Seller;
 import heading.ground.forms.post.MenuForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Menu extends base {
+public class Menu extends Base {
 
     @Id @GeneratedValue
     @Column(name = "menu_id")
@@ -43,7 +42,11 @@ public class Menu extends base {
     private Seller seller;
 
     @OneToMany(mappedBy = "menu",cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "menu",cascade = CascadeType.REMOVE) //필요한가?
+    private List<BookedMenu> bookedMenus = new ArrayList<>();
+
 
 
     public Menu(MenuForm form) {

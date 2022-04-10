@@ -1,11 +1,13 @@
 package heading.ground.entity.user;
 
+import heading.ground.entity.book.Book;
 import heading.ground.entity.post.Comment;
 import heading.ground.forms.user.StudentForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,8 +30,10 @@ public class Student extends BaseUser {
     private boolean isAdmin;
 
     @OneToMany(mappedBy = "writer",cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "student")
+    private List<Book> books = new ArrayList<>();
 
     public Student(Object std) {
         if(std instanceof StudentForm) {

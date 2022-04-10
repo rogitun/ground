@@ -1,6 +1,7 @@
 package heading.ground.entity.user;
 
 import heading.ground.entity.ImageFile;
+import heading.ground.entity.book.Book;
 import heading.ground.entity.post.Menu;
 import heading.ground.forms.user.SellerEditForm;
 import heading.ground.forms.user.SellerSignUpForm;
@@ -55,6 +56,12 @@ public class Seller extends BaseUser{
     //가게가 가진 메뉴를 연관
     @OneToMany(mappedBy = "seller",cascade = CascadeType.REMOVE)
     private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller")
+    private List<Book> books = new ArrayList<>();
+
+
+
 
     public Seller(SellerSignUpForm sf) {
         this.loginId = sf.getLoginId();

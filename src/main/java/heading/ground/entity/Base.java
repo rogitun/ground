@@ -1,4 +1,4 @@
-package heading.ground.entity.post;
+package heading.ground.entity;
 
 
 import org.springframework.data.annotation.CreatedDate;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class base {
+public class Base {
 
     @CreatedDate
     @Column(updatable = false)

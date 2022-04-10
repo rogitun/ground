@@ -1,5 +1,6 @@
 package heading.ground.entity.post;
 
+import heading.ground.entity.Base;
 import heading.ground.entity.user.Student;
 import heading.ground.forms.post.CommentForm;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Comment extends base{
+public class Comment extends Base {
 
     @Id @GeneratedValue
     private Long id;
