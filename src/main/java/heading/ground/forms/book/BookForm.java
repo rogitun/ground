@@ -6,24 +6,19 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 @Data
 public class BookForm {
-    //메뉴들 쫙 보여줘야함
-    //그 메뉴에 맞는 수량
-    //포장인지 혹은 매장인지
-    private String menu;
-    private int quantity;
+    //인원, 결제타입, 방문타입
+
+    List<MenuSet> arr = new ArrayList<>();
+    private String type;
+    private String payment;
+    private int number;
 
 
-    public BookForm() {
+    public List<MenuSet> returnArr(){
+        return arr;
     }
-
-    public BookForm(String name) {
-        menu=name;
-    }
-//
-//    public BookForm(String menuName, int quantity) {
-//        this.menuName = menuName;
-//        this.quantity = quantity;
-//    }
 }

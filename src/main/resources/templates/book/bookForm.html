@@ -14,7 +14,8 @@
     <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}"/>
     <!-- Dev Search UI -->
     <link rel="stylesheet" th:href="@{/styles/app.css}"/>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>예약하기</title>
     <style>
       .field-error {
@@ -39,20 +40,85 @@
                 <!-- Input:Text -->
                 <div class="form__field" th:each="m : ${form}">
                         <span>
-                            <input class="input input--text"  type="text"  th:value="${m}" readonly>
-                            <input class="input input--text" th:id=menu th:name="|menu${mStat.count}|"  type="text" th:value="${m}" hidden>
-                            <input class="input input--text" th:id=quantity type="text" th:name="|quantity${mStat.count}|"  style="float:right;" placeholder="수량을 입력해주세요."
+                             <label for="formInput#text" th:text="${m}"> </label>
+                            <input class="input input--text" th:id="|menu${mStat.count}|" th:name="name"  type="text" th:value="${m}" hidden>
+                            <input class="input input--text" th:id="|quantity${mStat.count}|" type="text" th:name="quantity"  style="float:right;" placeholder="수량을 입력해주세요."
                             required/>
                         </span>
                     <br>
                     <hr>
                 </div>
+                <label for="formInput#text">인원 </label>
+                <input class="input input--text"  type="text" id="formInput#text" name="number" required>
+                <label for="formInput#text">결제 타입 </label><br>
+                <input type="radio" name="payment" value="cash">현금
+                <input type="radio" name="payment" value="credit">카드
+                <hr>
+                <label for="formInput#text">포장/매장 </label><br>
+                <input type="radio" name="type" value="here">매장
+                <input type="radio" name="type" value="togo">포장
+                <hr>
 
-                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit"/>
+                <input class="btn btn--sub btn--lg  my-md" type="button" onclick="data()" value="확인"/>
             </form>
         </div>
     </div>
 </main>
 </body>
+<script th:inline="javascript">
+    function data(){
+        let a = document.getElementsByName('name');
+        let b = document.getElementsByName('quantity');
+        let number = document.getElementsByName('number');
+        let pay = document.getElementsByName('payment');
+        let t = document.getElementsByName('type');
 
+        let bookUrl = "/seller/"+ [[${sellerId}]] + "/book";
+
+        let payment;
+        let type;
+
+        let rUrl = "/seller/"+ [[${sellerId}]];
+
+        let arr = new Array();
+
+        for(let i=0;i<pay.length;i++){
+            if(pay[i].checked){
+                payment = pay[i].value;
+            }
+        }
+
+         for(let i=0;i<t.length;i++){
+            if(t[i].checked){
+                type = t[i].value;
+            }
+        }
+
+        for(let i = 0;i<a.length;i++){
+            arr.push({name : a[i].value, quantity:b[i].value});
+        }
+
+        let obj = {
+            "arr" : arr,
+            "type" : type,
+            "number" :  number[0].value,
+            "payment" :  payment,
+        };
+
+        $.ajax({
+            type: "post",
+            url : bookUrl,
+            traditional: true,
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify(obj),
+            success: function(result){
+                window.location.replace(rUrl);
+            },
+            error: function(error){
+                window.location.replace("/");
+            }
+        });
+    }
+
+</script>
 </html>

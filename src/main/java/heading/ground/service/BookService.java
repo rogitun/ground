@@ -5,6 +5,8 @@ import heading.ground.entity.book.BookedMenu;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.Seller;
 import heading.ground.entity.user.Student;
+import heading.ground.forms.book.BookForm;
+import heading.ground.forms.book.MenuSet;
 import heading.ground.repository.book.BookRepository;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -27,22 +28,20 @@ public class BookService {
 
 
     //TODO 쿼리 최적화
-    public List<BookedMenu> createBookMenus(HashMap<String, String> all) {
+    public List<BookedMenu> createBookMenus(List<MenuSet> form) {
         List<BookedMenu> bookedMenus = new ArrayList<>();
-        for(int i=1;i<=all.size()/2;i++){
-            String name = all.get("menu"+i);
-            int num = Integer.parseInt(all.get("quantity"+i));
-            Menu menu = menuRepository.findByName(name);
-            bookedMenus.add(new BookedMenu(menu, num));
+        for (MenuSet menuSet : form) {
+            Menu byName = menuRepository.findByName(menuSet.getName());
+            bookedMenus.add(new BookedMenu(byName,menuSet.getQuantity()));
         }
         return bookedMenus;
     }
 
     @Transactional
-    public void createBook(List<BookedMenu> bookMenus, Long studentId, Long sellerId) {
+    public void createBook(List<BookedMenu> bookMenus, Long studentId, Long sellerId,BookForm form) {
         Seller seller = sellerRepository.findById(sellerId).get();
         Student student = studentRepository.findById(studentId).get();
-        Book book = Book.book(seller, student, bookMenus);
+        Book book = Book.book(seller, student, bookMenus,form);
         bookRepository.save(book);
     }
 

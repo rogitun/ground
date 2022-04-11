@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -156,21 +157,23 @@ public class SellerController {
 
         List<String> menus = menuRepository.selectNameBySeller(id);
         model.addAttribute("form", menus);
+        model.addAttribute("sellerId",id);
         return "/book/bookForm";
     }
 
     @PostMapping("/{id}/book")
-    public String addBook(@PathVariable("id") Long id
-            , @RequestParam HashMap<String, String> all,
+    public String addBook(@PathVariable("id") Long id, @RequestBody BookForm form,
                           @SessionAttribute("user") BaseUser std) {
-        List<BookedMenu> bookMenus = bookService.createBookMenus(all);
 
+        log.info("form => {}",form);
+
+        List<BookedMenu> bookMenus = bookService.createBookMenus(form.returnArr());
         Student student = (Student) std;
 
+        bookService.createBook(bookMenus, student.getId(), id,form);
 
-        bookService.createBook(bookMenus, student.getId(), id);
-
-        return "redirect:/";
+        return "redirect:/seller/"+id;
     }
+
 
 }
