@@ -30,14 +30,17 @@ public class TestData {
             SellerSignUpForm se = new SellerSignUpForm("test"+i, "1234", i+"_Test_KFC", "02-000-000", "eee@eee.com");
             Menu menu = new MenuForm("김치전_"+i, 4500, "막걸리와 함께", "김치랑 밀가루").toEntity();
             Menu menu2 = new MenuForm("닭강정_"+i, 6500, "춘천닭강정", "밀가루랑 닭").toEntity();
+            //Menu menu3 = new MenuForm("냉면_"+i, 3500, "냉면냉면", "평양").toEntity();
             Seller seller = se.toEntity();
             Student student = s.toEntity();
 
             seu.save(seller);
             menu.addSeller(seller);
             menu2.addSeller(seller);
+            //menu3.addSeller(seller);
             mu.save(menu);
             mu.save(menu2);
+            //mu.save(menu3);
             su.save(student);
         }
 

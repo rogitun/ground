@@ -79,6 +79,7 @@
         let type;
 
         let rUrl = "/seller/"+ [[${sellerId}]];
+        let profile = "/student/profile";
 
         let arr = new Array();
 
@@ -112,9 +113,11 @@
             headers: {'Content-Type': 'application/json'},
             data: JSON.stringify(obj),
             success: function(result){
-                window.location.replace(rUrl);
+                alert("예약 성공");
+                window.location.replace(profile);
             },
             error: function(error){
+                 alert("예약 실패");
                 window.location.replace("/");
             }
         });

@@ -1,6 +1,6 @@
 package heading.ground.service;
 
-import heading.ground.dto.MenuDto;
+import heading.ground.dto.post.MenuDto;
 import heading.ground.dto.Paging;
 import heading.ground.entity.ImageFile;
 import heading.ground.entity.post.Comment;

@@ -1,6 +1,7 @@
 package heading.ground.controller;
 
-import heading.ground.dto.StudentDto;
+import heading.ground.dto.book.BookDto;
+import heading.ground.dto.user.StudentDto;
 import heading.ground.entity.book.Book;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Student;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -111,10 +113,12 @@ public class StudentsController {
         //내 예약 현황 가져오기
         //보여줄거 가게이름 + 가격 + 예약 날짜 + 처리 상태
         List<Book> books = bookService.findBooks(session.getId());
-        model.addAttribute("books",books);
+
+        List<BookDto> bookDtos = books.stream().map(b -> new BookDto(b)).collect(Collectors.toList());
+
+        model.addAttribute("books",bookDtos);
 
         return "user/student";
     }
-
 
 }

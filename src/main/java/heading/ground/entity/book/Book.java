@@ -46,6 +46,7 @@ public class Book extends Base {
     private List<BookedMenu> bookedMenus= new ArrayList<>(); //예약된 메뉴들
 
 
+
     public static Book book(Seller seller, Student student, List<BookedMenu> bookedMenus,
                             BookForm form){
         Book book = new Book();

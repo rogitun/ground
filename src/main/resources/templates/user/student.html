@@ -38,48 +38,25 @@
                 </div>
             </div>
             <div class="column column--2of3">
-<!--                <div class="devInfo">-->
-<!--                    <h3 class="devInfo__title">내 소개</h3>-->
-<!--                    <p class="devInfo__about" th:text="${account.desc}">-->
-<!--                        가게 소개.-->
-<!--                    </p>-->
-<!--                </div>-->
-<!--                <div class="settings">-->
-<!--                    <h3 class="settings__title">메뉴</h3>-->
-<!--                    <a class="tag tag&#45;&#45;pill tag&#45;&#45;sub settings__btn tag&#45;&#45;lg" th:href="@{/menus/add-menu}"><i-->
-<!--                            class="im im-plus"></i> 메뉴 추가</a>-->
-<!--                </div>-->
-
-<!--                <table class="settings__table">-->
-<!--                    <tr th:each="m : ${menus}">-->
-<!--                        <td class="settings__tableInfo">-->
-<!--                            <h4 th:text="${m.name}">김치찌게</h4>-->
-<!--                            <p th:text="${m.desc}"></p>-->
-<!--                        </td>-->
-<!--                        <td class="settings__tableActions">-->
-<!--                            <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" th:href="@{/menus/{id}/edit(id=${m.id})}"><i class="im im-edit"></i>수정</a>-->
-<!--                            <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" href="#"><i-->
-<!--                                    class="im im-x-mark-circle-o"></i>-->
-<!--                                삭제</a>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                </table>-->
 
                 <div class="settings">
-                    <h3 class="settings__title">내 예약</h3>
-                    <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i>예약 관리</a>
+                    <h3 class="settings__title">현재 예약</h3>
                 </div>
 
                 <table class="settings__table">
                     <tr th:each="b : ${books}">
                         <td class="settings__thumbnail">
-                            <a href="single-project.html"><img src="" alt="Project Thumbnail"/></a>
+                            <a th:href="@{/seller/{id}(id=${b.seller.id})}">
+                                <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|" />
+                                <img  th:unless="${b.seller.photo}" th:src="@{/images/default_food.png}"/>
+                            </a>
                         </td>
                         <td class="settings__tableInfo">
-                            <a href="single-project.html" th:text="${b.seller.name}">가게이름</a>
+                            <a th:href="@{/seller/{id}(id=${b.seller.id})}" th:text="${b.seller.name}">가게이름</a>
                             <p th:text="${b.totalPrice}">가격</p>
                             <p th:text="${b.bookTime}"></p>
                             <p th:text="${b.status}">처리현황</p>
+                            <p th:text="${b.type}">방문타입</p>
                         </td>
                         <td class="settings__tableActions">
                             <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i>예약 수정</a>
@@ -87,6 +64,27 @@
                                     class="im im-x-mark-circle-o"></i>취소 신청</a>
                         </td>
                     </tr>
+                </table>
+
+                <div class="settings">
+                    <h3 class="settings__title">처리된 예약</h3>
+                </div>
+
+                <table class="settings__table">
+<!--                    <tr th:each="b : ${books}">-->
+<!--                        <td class="settings__thumbnail">-->
+<!--                            <a href="single-project.html"><img src="" alt="Project Thumbnail"/></a>-->
+<!--                        </td>-->
+<!--                        <td class="settings__tableInfo">-->
+<!--                            <a href="single-project.html" th:text="${b.seller.name}">가게이름</a>-->
+<!--                            <p th:text="${b.totalPrice}">가격</p>-->
+<!--                        </td>-->
+<!--                        <td class="settings__tableActions">-->
+<!--                            <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" href="#"><i class="im im-edit"></i>예약 수정</a>-->
+<!--                            <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" href="#"><i-->
+<!--                                    class="im im-x-mark-circle-o"></i>취소 신청</a>-->
+<!--                        </td>-->
+<!--                    </tr>-->
                 </table>
             </div>
         </div>

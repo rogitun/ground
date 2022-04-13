@@ -7,7 +7,6 @@ import heading.ground.forms.user.SellerEditForm;
 import heading.ground.forms.user.SellerSignUpForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,10 +36,6 @@ public class Seller extends BaseUser{
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private ImageFile imageFile;
 
-//    @Column(length = 64)
-//    private String photo;
-
-
     //TODO 이미지 파일 추가
     
     //가게 정보
@@ -59,9 +54,6 @@ public class Seller extends BaseUser{
 
     @OneToMany(mappedBy = "seller")
     private List<Book> books = new ArrayList<>();
-
-
-
 
     public Seller(SellerSignUpForm sf) {
         this.loginId = sf.getLoginId();

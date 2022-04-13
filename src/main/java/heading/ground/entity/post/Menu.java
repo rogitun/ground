@@ -37,7 +37,7 @@ public class Menu extends Base {
     private ImageFile image;
 
     //메뉴가 소속된 가게
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private Seller seller;
 

@@ -1,4 +1,4 @@
-package heading.ground.dto;
+package heading.ground.dto.post;
 
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.Seller;

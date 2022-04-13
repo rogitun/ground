@@ -1,4 +1,4 @@
-package heading.ground.dto;
+package heading.ground.dto.user;
 
 import lombok.Data;
 
@@ -12,5 +12,9 @@ public class StudentDto {
     public StudentDto(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public StudentDto(String name) {
+        this.name = name;
     }
 }

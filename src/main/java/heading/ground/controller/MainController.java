@@ -1,7 +1,8 @@
 package heading.ground.controller;
 
 import heading.ground.dto.Paging;
-import heading.ground.dto.SellerDto;
+import heading.ground.dto.post.MenuDto;
+import heading.ground.dto.user.SellerDto;
 import heading.ground.file.FileStore;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;

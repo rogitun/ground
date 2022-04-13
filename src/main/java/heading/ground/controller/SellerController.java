@@ -1,14 +1,12 @@
 package heading.ground.controller;
 
-import heading.ground.dto.MenuDto;
-import heading.ground.dto.SellerDto;
+import heading.ground.dto.post.MenuDto;
+import heading.ground.dto.user.SellerDto;
 import heading.ground.entity.book.BookedMenu;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
 import heading.ground.entity.user.Student;
-import heading.ground.file.FileStore;
-import heading.ground.file.FileRepository;
 import heading.ground.forms.book.BookForm;
 import heading.ground.forms.user.LoginForm;
 import heading.ground.forms.user.SellerEditForm;
@@ -16,7 +14,6 @@ import heading.ground.forms.user.SellerSignUpForm;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.service.BookService;
-import heading.ground.service.PostService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +22,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -87,6 +80,7 @@ public class SellerController {
     @GetMapping("/account")     //가게 정보로 가는 메서드
     public String account(Model model, @SessionAttribute(name = "user", required = false) BaseUser sessionSeller) {
 
+        //TODO Seller & Menu 한꺼번에 fetch Join으로 가져와서 DTO 전환
         Seller seller = (Seller) sessionSeller;
         Seller sellerEntity = sellerRepository.findById(seller.getId()).get();
         SellerDto sellerDto = new SellerDto(sellerEntity);
@@ -98,6 +92,8 @@ public class SellerController {
 
         model.addAttribute("menus", menuDto);
         model.addAttribute("account", sellerDto);
+
+
         //model.addAttribute("accountId", seller.getId());
         return "/user/account";
     }
@@ -165,8 +161,6 @@ public class SellerController {
     public String addBook(@PathVariable("id") Long id, @RequestBody BookForm form,
                           @SessionAttribute("user") BaseUser std) {
 
-        log.info("form => {}",form);
-
         List<BookedMenu> bookMenus = bookService.createBookMenus(form.returnArr());
         Student student = (Student) std;
 
@@ -174,6 +168,7 @@ public class SellerController {
 
         return "redirect:/seller/"+id;
     }
+
 
 
 }

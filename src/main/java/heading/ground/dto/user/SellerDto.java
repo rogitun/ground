@@ -1,15 +1,18 @@
-package heading.ground.dto;
+package heading.ground.dto.user;
 
+import heading.ground.dto.post.MenuDto;
 import heading.ground.entity.ImageFile;
 import heading.ground.entity.user.Address;
 import heading.ground.entity.user.Seller;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@Slf4j
 public class SellerDto {
 
     private Long id;
@@ -40,7 +43,7 @@ public class SellerDto {
         this.email = seller.getEmail();
         this.desc = seller.getDesc();
         photoCheck(seller.getImageFile());
-        if(seller.getMenus().size()>0) {
+        if(!seller.getMenus().isEmpty()) {
             menus = seller.getMenus()
                     .stream()
                     .map(m -> new MenuDto(m))

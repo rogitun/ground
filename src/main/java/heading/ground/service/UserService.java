@@ -1,14 +1,17 @@
 package heading.ground.service;
 
 import heading.ground.dto.Paging;
-import heading.ground.dto.SellerDto;
+import heading.ground.dto.post.MenuDto;
+import heading.ground.dto.user.SellerDto;
 import heading.ground.entity.ImageFile;
+import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
 import heading.ground.entity.user.Seller;
 import heading.ground.entity.user.Student;
 import heading.ground.file.FileRepository;
 import heading.ground.file.FileStore;
 import heading.ground.forms.user.SellerEditForm;
+import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.repository.user.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -86,4 +88,5 @@ public class UserService {
     public Paging pageTemp(Page<SellerDto> page){
         return new Paging(page.getTotalPages(), page.getNumber());
     }
+
 }

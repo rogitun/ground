@@ -1,7 +1,7 @@
 package heading.ground.controller;
 
-import heading.ground.dto.CommentDto;
-import heading.ground.dto.MenuDto;
+import heading.ground.dto.post.CommentDto;
+import heading.ground.dto.post.MenuDto;
 import heading.ground.dto.Paging;
 import heading.ground.entity.post.Comment;
 import heading.ground.entity.post.Menu;

@@ -11,4 +11,7 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 
     @Query("select b from Book b where :id in (b.seller.id, b.student.id)")
     List<Book> findAllBooks(@Param("id") Long id);
+
+    //TODO Book - bookedmenu - menu fetccJoin 처리
+
 }
