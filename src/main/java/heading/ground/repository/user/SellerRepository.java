@@ -23,4 +23,10 @@ public interface SellerRepository extends JpaRepository<Seller,Long> {
             "join fetch s.menus m",
             countQuery = "select count(s) from Seller s")
     Page<Seller> findAll(PageRequest pageRequest);
+
+    @Query("select s from Seller s " +
+            "join fetch s.menus m " +
+            "where s.id =:id")
+    Seller findByIdWithMenu(@Param("id") Long id);
+
 }

@@ -31,4 +31,9 @@ public class BookedMenu {
         this.price = menu.getPrice();
         this.quantity = quantity;
     }
+
+    public void addBook(Book book){
+        this.book = book;
+    }
+
 }

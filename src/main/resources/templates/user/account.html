@@ -14,6 +14,8 @@
     <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}"/>
     <!-- Dev Search UI -->
     <link rel="stylesheet" th:href="@{/styles/app.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>MyAccount</title>
 </head>
@@ -58,7 +60,7 @@
                 <table class="settings__table">
                     <tr th:each="m : ${menus}">
                         <td class="settings__tableInfo">
-                            <h4 th:text="${m.name}">김치찌게</h4>
+                            <h4 th:text="${m.name}">메뉴이름</h4>
                             <p th:text="${m.desc}"></p>
                         </td>
                         <td class="settings__tableActions">
@@ -76,18 +78,18 @@
                 </div>
 
                 <table class="settings__table">
-                    <tr>
+                    <tr th:each="b : ${books}">
                         <td class="settings__thumbnail">
                             <a href="single-project.html"><img src="" alt="Project Thumbnail"/></a>
                         </td>
                         <td class="settings__tableInfo">
-                            <a href="single-project.html">@@님 예약</a>
-                            <p>
-                                인원 @명 / ~~
-                            </p>
+                            <a href="single-project.html" th:text="${b.student.name}">예약자 이름</a>
+                            <p th:text="|예약 인원 : ${b.number}|">인원 @명 / ~~</p>
+                            <p th:text="|예약 유형 : ${b.type}|">방문</p>
+                            <p th:text="|예약 시간 : ${b.bookTime}|"></p>
                         </td>
                         <td class="settings__tableActions">
-                            <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i>Booking</a>
+                            <a class="tag tag--pill tag--main settings__btn" th:onclick="|javascript:accept('${b.id}')|"><i class="im im-edit"></i>Accept</a>
                             <a class="tag tag--pill tag--main settings__btn" href="#"><i
                                     class="im im-x-mark-circle-o"></i>Reject</a>
                         </td>
@@ -99,4 +101,28 @@
 </main>
 </body>
 
+<script th:inline="javascript">
+    function accept(bid){
+        let id = bid;
+        let acceptUrl = "/book/" + id;
+        let seller = "/seller/account"
+
+        console.log(id);
+        $.ajax({
+            type: "post",
+            url : acceptUrl,
+            data: id,
+            dataType : 'text',
+            success: function(result){
+                alert("예약이 승인되었습니다.");
+                window.location.replace(seller);
+            },
+            error: function(error){
+                 alert("예약 승인 과정에 문제가 발생했습니다.");
+                window.location.replace("/");
+            }
+        });
+    }
+
+</script>
 </html>

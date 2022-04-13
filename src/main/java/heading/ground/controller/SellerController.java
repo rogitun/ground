@@ -1,7 +1,9 @@
 package heading.ground.controller;
 
+import heading.ground.dto.book.BookDto;
 import heading.ground.dto.post.MenuDto;
 import heading.ground.dto.user.SellerDto;
+import heading.ground.entity.book.Book;
 import heading.ground.entity.book.BookedMenu;
 import heading.ground.entity.post.Menu;
 import heading.ground.entity.user.BaseUser;
@@ -81,15 +83,24 @@ public class SellerController {
     public String account(Model model, @SessionAttribute(name = "user", required = false) BaseUser sessionSeller) {
 
         //TODO Seller & Menu 한꺼번에 fetch Join으로 가져와서 DTO 전환
-        Seller seller = (Seller) sessionSeller;
-        Seller sellerEntity = sellerRepository.findById(seller.getId()).get();
-        SellerDto sellerDto = new SellerDto(sellerEntity);
+        Seller session = (Seller) sessionSeller;
+        Seller seller = sellerRepository.findByIdWithMenu(session.getId());
 
-        List<Menu> menus = menuRepository.findBySellerId(seller.getId());
-        List<MenuDto> menuDto = menus.stream()
-                .map(m -> new MenuDto(m))
+        SellerDto sellerDto = new SellerDto(seller);
+        List<MenuDto> menuDto = sellerDto.getMenus();
+        List<Book> books = bookService.findBooksForSeller(sellerDto.getId());
+        List<BookDto> bookDto = books.stream()
+                .map(b -> new BookDto(b))
                 .collect(Collectors.toList());
 
+//        Seller sellerEntity = sellerRepository.findById(seller.getId()).get();
+//        SellerDto sellerDto = new SellerDto(sellerEntity);
+//
+//        List<Menu> menus = menuRepository.findBySellerId(seller.getId());
+//        List<MenuDto> menuDto = menus.stream()
+//                .map(m -> new MenuDto(m))
+//                .collect(Collectors.toList());
+        model.addAttribute("books",bookDto);
         model.addAttribute("menus", menuDto);
         model.addAttribute("account", sellerDto);
 
@@ -153,7 +164,7 @@ public class SellerController {
 
         List<String> menus = menuRepository.selectNameBySeller(id);
         model.addAttribute("form", menus);
-        model.addAttribute("sellerId",id);
+        model.addAttribute("sellerId", id);
         return "/book/bookForm";
     }
 
@@ -164,11 +175,10 @@ public class SellerController {
         List<BookedMenu> bookMenus = bookService.createBookMenus(form.returnArr());
         Student student = (Student) std;
 
-        bookService.createBook(bookMenus, student.getId(), id,form);
+        bookService.createBook(bookMenus, student.getId(), id, form);
 
-        return "redirect:/seller/"+id;
+        return "redirect:/seller/" + id;
     }
-
 
 
 }

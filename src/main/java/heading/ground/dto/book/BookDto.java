@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 public class BookDto {
 
+    private Long id;
     private BookStatus status;
 
     private BookType type; //방문 타입
@@ -33,6 +34,7 @@ public class BookDto {
     private List<BookedMenuDto> bookedMenus = new ArrayList<>(); //예약된 메뉴들
 
     public BookDto(Book book) {
+        id = book.getId();
         status = book.getStatus();
         type = book.getType();
         payment = book.getPayment();

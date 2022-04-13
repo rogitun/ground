@@ -70,6 +70,7 @@ public class Book extends Base {
 
     public void setBook(Seller seller,Student student,List<BookedMenu> bookedMenus) {
         for (BookedMenu bookedMenu : bookedMenus) {
+            bookedMenu.addBook(this);
             this.bookedMenus.add(bookedMenu);
             this.totalPrice += (bookedMenu.getPrice() * bookedMenu.getQuantity());
         }
@@ -81,6 +82,13 @@ public class Book extends Base {
 
         this.status = BookStatus.PENDING;
         this.bookTime = LocalDateTime.now();
+    }
+
+    public void processBook(boolean flag){
+        if(flag)
+            this.status = BookStatus.ACCEPT;
+        else
+            this.status = BookStatus.CANCELED;
     }
 
 }

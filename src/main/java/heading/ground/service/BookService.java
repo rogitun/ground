@@ -45,8 +45,19 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public List<Book> findBooks(Long id) {
-        List<Book> allBooks = bookRepository.findAllBooks(id);
+    public List<Book> findBooksForSeller(Long id) {
+        List<Book> allBooks = bookRepository.findAllBooksForSeller(id);
         return allBooks;
+    }
+
+    public List<Book> findBooksForStudent(Long id) {
+        List<Book> allBooks = bookRepository.findAllBooksForStudent(id);
+        return allBooks;
+    }
+
+    @Transactional
+    public void process(Long id,boolean flag) {
+        Book book = bookRepository.findById(id).get();
+        book.processBook(flag);
     }
 }

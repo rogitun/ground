@@ -58,7 +58,7 @@
                             <p th:text="${b.status}">처리현황</p>
                             <p th:text="${b.type}">방문타입</p>
                         </td>
-                        <td class="settings__tableActions">
+                        <td class="settings__tableActions" th:if="${b.status != 'ACCEPT'}">
                             <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i>예약 수정</a>
                             <a class="tag tag--pill tag--main settings__btn" href="#"><i
                                     class="im im-x-mark-circle-o"></i>취소 신청</a>

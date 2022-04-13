@@ -14,4 +14,16 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 
     //TODO Book - bookedmenu - menu fetccJoin 처리
 
+    @Query("select distinct b from Book b " +
+            "join fetch b.student s " +
+            "join fetch b.bookedMenus bm " +
+            "where b.seller.id = :pid ")
+    List<Book> findAllBooksForSeller(@Param("pid") Long id);
+
+    @Query("select distinct b from Book b " +
+            "join fetch b.seller s " +
+            "join fetch b.bookedMenus bm " +
+            "join fetch bm.menu bmm " +
+            "where b.student.id = :pid")
+    List<Book> findAllBooksForStudent(@Param("pid") Long id);
 }
