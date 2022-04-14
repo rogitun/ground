@@ -40,8 +40,8 @@
                 <!-- Input:Text -->
                 <div class="form__field" th:each="m : ${form}">
                         <span>
-                             <label for="formInput#text" th:text="${m}"> </label>
-                            <input class="input input--text" th:id="|menu${mStat.count}|" th:name="name"  type="text" th:value="${m}" hidden>
+                             <label for="formInput#text" th:text="|${m.name} : ${m.price}원|"> </label>
+                            <input class="input input--text" th:id="|menu${mStat.count}|" th:name="name"  type="text" th:value="${m.name}" hidden>
                             <input class="input input--text" th:id="|quantity${mStat.count}|" type="text" th:name="quantity"  style="float:right;" placeholder="수량을 입력해주세요."
                             required/>
                         </span>

@@ -34,6 +34,8 @@ public class Book extends Base {
 
     private int number; //사람 몇명 오는지
 
+    private String reason;
+
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student; //예약자
@@ -89,6 +91,11 @@ public class Book extends Base {
             this.status = BookStatus.ACCEPT;
         else
             this.status = BookStatus.CANCELED;
+    }
+
+    public void bookReject(String reason){
+        this.reason = reason;
+        this.status = BookStatus.CANCELED;
     }
 
 }

@@ -8,15 +8,19 @@ import heading.ground.entity.user.Student;
 import heading.ground.forms.book.BookForm;
 import heading.ground.forms.book.MenuSet;
 import heading.ground.repository.book.BookRepository;
+import heading.ground.repository.book.BookedMenuRepository;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.repository.user.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,23 +29,23 @@ public class BookService {
     private final StudentRepository studentRepository;
     private final MenuRepository menuRepository;
     private final SellerRepository sellerRepository;
-
+    private final BookedMenuRepository bookedMenuRepository;
 
     //TODO 쿼리 최적화
     public List<BookedMenu> createBookMenus(List<MenuSet> form) {
         List<BookedMenu> bookedMenus = new ArrayList<>();
         for (MenuSet menuSet : form) {
             Menu byName = menuRepository.findByName(menuSet.getName());
-            bookedMenus.add(new BookedMenu(byName,menuSet.getQuantity()));
+            bookedMenus.add(new BookedMenu(byName, menuSet.getQuantity()));
         }
         return bookedMenus;
     }
 
     @Transactional
-    public void createBook(List<BookedMenu> bookMenus, Long studentId, Long sellerId,BookForm form) {
+    public void createBook(List<BookedMenu> bookMenus, Long studentId, Long sellerId, BookForm form) {
         Seller seller = sellerRepository.findById(sellerId).get();
         Student student = studentRepository.findById(studentId).get();
-        Book book = Book.book(seller, student, bookMenus,form);
+        Book book = Book.book(seller, student, bookMenus, form);
         bookRepository.save(book);
     }
 
@@ -56,8 +60,16 @@ public class BookService {
     }
 
     @Transactional
-    public void process(Long id,boolean flag) {
+    public void process(Long id, boolean flag) {
         Book book = bookRepository.findById(id).get();
         book.processBook(flag);
+    }
+
+    @Transactional
+    public void rejectBook(Long id, String reason) {
+        Book book = bookRepository.findByIdWithCollections(id);
+        List<BookedMenu> bookedMenus = book.getBookedMenus();
+        book.bookReject(reason);
+        bookedMenuRepository.deleteAllInBatch(bookedMenus);
     }
 }

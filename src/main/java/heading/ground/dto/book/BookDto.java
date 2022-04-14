@@ -31,6 +31,8 @@ public class BookDto {
 
     private BookSellerDto seller;
 
+    private String reason;
+
     private List<BookedMenuDto> bookedMenus = new ArrayList<>(); //예약된 메뉴들
 
     public BookDto(Book book) {
@@ -43,9 +45,23 @@ public class BookDto {
         number = book.getNumber();
         student = new StudentDto(book.getStudent().getName());
         seller = new BookSellerDto(book.getSeller());
+        reason = book.getReason();
         book.getBookedMenus()
                 .stream()
                 .map(bm -> new BookedMenuDto(bm))
                 .forEach(s -> bookedMenus.add(s));
     }
+
+    public String type(){
+        return type.toString().toLowerCase();
+    }
+
+    public String payment(){
+        return payment.toString().toLowerCase();
+    }
+
+    public String status(){
+        return status.toString().toLowerCase();
+    }
+
 }

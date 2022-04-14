@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book,Long> {
 
@@ -16,14 +17,29 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 
     @Query("select distinct b from Book b " +
             "join fetch b.student s " +
+            "join fetch b.seller se " +
             "join fetch b.bookedMenus bm " +
-            "where b.seller.id = :pid ")
+            "where b.id = :bid ")
+    Book findByIdWithCollections(@Param("bid") Long id);
+
+
+    @Query("select distinct b from Book b " +
+            "join fetch b.student s " +
+            "where b.seller.id = :pid")
     List<Book> findAllBooksForSeller(@Param("pid") Long id);
 
     @Query("select distinct b from Book b " +
             "join fetch b.seller s " +
-            "join fetch b.bookedMenus bm " +
-            "join fetch bm.menu bmm " +
             "where b.student.id = :pid")
     List<Book> findAllBooksForStudent(@Param("pid") Long id);
+
+
+    @Query("select b from Book b " +
+            "join fetch b.seller s " +
+            "where s.id = :pid")
+    Optional<Book> findBookWithSeller(@Param("pid") Long id);
+
+
+
+
 }

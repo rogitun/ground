@@ -45,6 +45,7 @@
 
                 <table class="settings__table">
                     <tr th:each="b : ${books}">
+                        <div th:if="${b.status()=='pending'}">
                         <td class="settings__thumbnail">
                             <a th:href="@{/seller/{id}(id=${b.seller.id})}">
                                 <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|" />
@@ -52,17 +53,18 @@
                             </a>
                         </td>
                         <td class="settings__tableInfo">
-                            <a th:href="@{/seller/{id}(id=${b.seller.id})}" th:text="${b.seller.name}">가게이름</a>
-                            <p th:text="${b.totalPrice}">가격</p>
-                            <p th:text="${b.bookTime}"></p>
-                            <p th:text="${b.status}">처리현황</p>
+                            <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.seller.name}">가게이름</a>
+                            <p th:text="|총 가격 : ${b.totalPrice}|">가격</p>
+                            <p th:text="|예약 일시 : ${b.bookTime}|"></p>
+                            <p th:text="|진행 상황 : ${b.status}|">처리현황</p>
                             <p th:text="${b.type}">방문타입</p>
                         </td>
-                        <td class="settings__tableActions" th:if="${b.status != 'ACCEPT'}">
-                            <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i>예약 수정</a>
+                        <td class="settings__tableActions" th:unless="${b.status() == 'canceled'}">
+                            <a class="tag tag--pill tag--main settings__btn" th:unless="${b.status()=='accept'}" href="#"><i class="im im-edit"></i>예약 수정</a>
                             <a class="tag tag--pill tag--main settings__btn" href="#"><i
                                     class="im im-x-mark-circle-o"></i>취소 신청</a>
                         </td>
+                        </div>
                     </tr>
                 </table>
 
@@ -71,20 +73,22 @@
                 </div>
 
                 <table class="settings__table">
-<!--                    <tr th:each="b : ${books}">-->
-<!--                        <td class="settings__thumbnail">-->
-<!--                            <a href="single-project.html"><img src="" alt="Project Thumbnail"/></a>-->
-<!--                        </td>-->
-<!--                        <td class="settings__tableInfo">-->
-<!--                            <a href="single-project.html" th:text="${b.seller.name}">가게이름</a>-->
-<!--                            <p th:text="${b.totalPrice}">가격</p>-->
-<!--                        </td>-->
-<!--                        <td class="settings__tableActions">-->
-<!--                            <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" href="#"><i class="im im-edit"></i>예약 수정</a>-->
-<!--                            <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" href="#"><i-->
-<!--                                    class="im im-x-mark-circle-o"></i>취소 신청</a>-->
-<!--                        </td>-->
-<!--                    </tr>-->
+                    <tr th:each="b : ${books}">
+                        <div th:unless="${b.status() == 'pending'}">
+                        <td class="settings__thumbnail">
+                            <a th:href="@{/seller/{id}(id=${b.seller.id})}">
+                                <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|" />
+                                <img  th:unless="${b.seller.photo}" th:src="@{/images/default_food.png}"/>
+                            </a>
+                        </td>
+                        <td class="settings__tableInfo">
+                            <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.seller.name}">가게이름</a>
+                            <p th:text="|예약 일시 : ${b.bookTime}|"></p>
+                            <p th:text="|진행 상황 : ${b.status}|"></p>
+                            <p th:text="|사유 : ${b.reason}|"></p>
+                        </td>
+                        </div>
+                    </tr>
                 </table>
             </div>
         </div>

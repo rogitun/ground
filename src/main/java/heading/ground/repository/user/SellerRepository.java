@@ -29,4 +29,6 @@ public interface SellerRepository extends JpaRepository<Seller,Long> {
             "where s.id =:id")
     Seller findByIdWithMenu(@Param("id") Long id);
 
+
+
 }

@@ -79,18 +79,19 @@
 
                 <table class="settings__table">
                     <tr th:each="b : ${books}">
-                        <td class="settings__thumbnail">
-                            <a href="single-project.html"><img src="" alt="Project Thumbnail"/></a>
-                        </td>
+<!--                        <td class="settings__thumbnail">-->
+<!--                            <a href="single-project.html"><img src="" alt="Project Thumbnail"/></a>-->
+<!--                        </td>-->
                         <td class="settings__tableInfo">
-                            <a href="single-project.html" th:text="${b.student.name}">예약자 이름</a>
+                            <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.student.name}">예약자 이름</a>
                             <p th:text="|예약 인원 : ${b.number}|">인원 @명 / ~~</p>
                             <p th:text="|예약 유형 : ${b.type}|">방문</p>
                             <p th:text="|예약 시간 : ${b.bookTime}|"></p>
+                            <p th:text="|처리 상태 : ${b.status}|"></p>
                         </td>
-                        <td class="settings__tableActions">
-                            <a class="tag tag--pill tag--main settings__btn" th:onclick="|javascript:accept('${b.id}')|"><i class="im im-edit"></i>Accept</a>
-                            <a class="tag tag--pill tag--main settings__btn" href="#"><i
+                        <td class="settings__tableActions" th:unless="${b.status() == 'canceled'}">
+                            <a class="tag tag--pill tag--main settings__btn" th:unless="${b.status() == 'accept'}" th:onclick="|javascript:accept('${b.id}')|"><i class="im im-edit"></i>Accept</a>
+                            <a class="tag tag--pill tag--main settings__btn" th:href = "@{/book/{id}/reject(id=${b.id})}"><i
                                     class="im im-x-mark-circle-o"></i>Reject</a>
                         </td>
                     </tr>
@@ -104,7 +105,7 @@
 <script th:inline="javascript">
     function accept(bid){
         let id = bid;
-        let acceptUrl = "/book/" + id;
+        let acceptUrl = "/book/" + id + "/accept";
         let seller = "/seller/account"
 
         console.log(id);
@@ -118,11 +119,33 @@
                 window.location.replace(seller);
             },
             error: function(error){
-                 alert("예약 승인 과정에 문제가 발생했습니다.");
+                 alert("예약 처리 과정에 문제가 발생했습니다.");
                 window.location.replace("/");
             }
         });
     }
+
+<!--    function reject(bid){-->
+
+<!--      let rejectUrl = "/book/" + id + "/reject";-->
+<!--      let seller = "/seller/account"-->
+
+<!--     $.ajax({-->
+<!--            type: "post",-->
+<!--            url : acceptUrl,-->
+<!--            data: id,-->
+<!--            dataType : 'text',-->
+<!--            success: function(result){-->
+<!--                alert("예약이 거절되었습니다.");-->
+<!--                window.location.replace(seller);-->
+<!--            },-->
+<!--            error: function(error){-->
+<!--                 alert("예약 처리 과정에 문제가 발생했습니다.");-->
+<!--                window.location.replace("/");-->
+<!--            }-->
+<!--        });-->
+
+<!--    }-->
 
 </script>
 </html>

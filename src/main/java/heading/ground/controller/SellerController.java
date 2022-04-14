@@ -1,6 +1,7 @@
 package heading.ground.controller;
 
 import heading.ground.dto.book.BookDto;
+import heading.ground.dto.book.MenuListDto;
 import heading.ground.dto.post.MenuDto;
 import heading.ground.dto.user.SellerDto;
 import heading.ground.entity.book.Book;
@@ -93,13 +94,6 @@ public class SellerController {
                 .map(b -> new BookDto(b))
                 .collect(Collectors.toList());
 
-//        Seller sellerEntity = sellerRepository.findById(seller.getId()).get();
-//        SellerDto sellerDto = new SellerDto(sellerEntity);
-//
-//        List<Menu> menus = menuRepository.findBySellerId(seller.getId());
-//        List<MenuDto> menuDto = menus.stream()
-//                .map(m -> new MenuDto(m))
-//                .collect(Collectors.toList());
         model.addAttribute("books",bookDto);
         model.addAttribute("menus", menuDto);
         model.addAttribute("account", sellerDto);
@@ -162,7 +156,9 @@ public class SellerController {
             return "redirect:/seller/" + id;
         }
 
-        List<String> menus = menuRepository.selectNameBySeller(id);
+        List<Menu> menuList = menuRepository.selectNameBySeller(id);
+        List<MenuListDto> menus = menuList.stream().map(m -> new MenuListDto(m)).collect(Collectors.toList());
+
         model.addAttribute("form", menus);
         model.addAttribute("sellerId", id);
         return "/book/bookForm";
