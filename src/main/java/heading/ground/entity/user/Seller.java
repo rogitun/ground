@@ -15,14 +15,17 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-//@ToString
 public class Seller extends BaseUser{
 
-    @Id @GeneratedValue
-    private Long id;
+//    @Id
+//    @GeneratedValue
+//    private Long id;
 
-    private String loginId;
-    private String password;
+//    private String loginId;
+//    private String password;
+
+    //    private String email;
+//    private boolean isAdmin;
 
     private String name; //가게 이름
 
@@ -41,9 +44,6 @@ public class Seller extends BaseUser{
     //가게 정보
     private String SellerId; //사업자 번호
 
-    private String email;
-
-    private boolean isAdmin;
 
     @Column(columnDefinition = "text")
     private String desc;

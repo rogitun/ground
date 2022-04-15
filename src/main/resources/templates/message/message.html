@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
+    <!-- Icon - IconMonster -->
+    <link rel="stylesheet" href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css"/>
+    <!-- Mumble UI -->
+    <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}"/>
+    <!-- Dev Search UI -->
+    <link rel="stylesheet" th:href="@{/styles/app.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>메세지_상세</title>
+</head>
+
+<body>
+<div th:replace="main/nav :: header"></div>
+<!-- Main Section -->
+<main class="messagePage my-xl">
+    <div class="content-box">
+        <div class="message">
+            <a class="backButton" href="inbox.html"><i class="im im-angle-left"></i></a>
+            <h4 class="message__subject" th:unless="${msg.priorTitle == null}" th:text="|${msg.priorTitle}에 대한 답장|"></h4>
+            <h2 class="message__subject" th:text="${msg.title}"></h2>
+            <p class="message__author" th:text="|보낸이 : ${msg.writer.name}|"></p>
+            <p class="message__date" th:text="${msg.created}"></p>
+            <div class="message__body" th:text="${msg.body}">
+            </div>
+            <div th:if="${session.user.getId() == msg.receiver.id}">
+                <a th:href="@{/{id}/message-reply(id=${msg.id})}"><input class="btn btn--sub btn--lg  my-md" type="button" value="답장하기"/></a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+<script th:inline="javascript">
+  function reply(){
+      let priorMsgId = [[${msg.id}]]
+      let receiverId = [[${msg.receiver.id}]]
+      let nextUrl = "/" + receiverId + "/message-reply"
+
+      let obj = {
+         "priorId" : priorMsgId
+      }
+           $.ajax({
+            type: "get",
+            url : nextUrl,
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify(obj),
+            success: function(result){
+                 window.location.replace(nextUrl);
+            },
+            error: function(error){
+                 alert("답장 실패");
+                window.location.replace("/");
+            }
+        });
+
+  }
+
+</script>
+
+</html>

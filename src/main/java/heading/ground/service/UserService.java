@@ -33,7 +33,6 @@ public class UserService {
     private final StudentRepository studentRepository;
     private final SellerRepository sellerRepository;
     private final FileRepository fileRepository;
-
     private final FileStore fileStore;
 
     public BaseUser logIn(String loginId, String password) {
@@ -88,5 +87,6 @@ public class UserService {
     public Paging pageTemp(Page<SellerDto> page){
         return new Paging(page.getTotalPages(), page.getNumber());
     }
+
 
 }

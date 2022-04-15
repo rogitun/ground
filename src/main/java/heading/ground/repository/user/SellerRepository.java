@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
+//TODO -> UserRepository로 통합
 public interface SellerRepository extends JpaRepository<Seller,Long> {
 
     long countByLoginId(@Param("loginId") String loginId);

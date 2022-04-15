@@ -15,19 +15,19 @@ import java.util.List;
 @NoArgsConstructor
 public class Student extends BaseUser {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "student_id")
-    private Long id;
+//    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @Column(name = "student_id")
+//    private Long id;
 
-    private String loginId;
-
-    private String password;
-
-    private String name;
-
-    private String email;
-
-    private boolean isAdmin;
+//    private String loginId;
+//
+//    private String password;
+//
+//    private String name;
+//
+//    private String email;
+//
+//    private boolean isAdmin;
 
     @OneToMany(mappedBy = "writer",cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();

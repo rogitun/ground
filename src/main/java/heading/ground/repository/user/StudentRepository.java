@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
+//TODO -> UserRepository로 통합
 public interface StudentRepository extends JpaRepository<Student,Long> {
 
     Optional<Student> findByLoginId(String loginId);

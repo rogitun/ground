@@ -1,0 +1,44 @@
+package heading.ground.forms.util;
+
+import heading.ground.entity.util.Message;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
+public class MsgForm {
+
+    @NotBlank
+    @Length(max = 16)
+    private String title;
+
+    @NotBlank
+    @Length(max = 500)
+    private String body;
+
+    @NotNull
+    private Long senderId;
+
+    @NotNull
+    private Long receiverId;
+
+    @NotNull
+    private String receiverName;
+
+    private String priorMsg;
+
+    public void setIds(String name,Long Sid, Long Rid){
+        receiverName = name;
+        senderId = Sid;
+        receiverId = Rid;
+    }
+
+    public void setReply(Message msg){
+        receiverName = msg.getWriter().getName();
+        senderId = msg.getReceiver().getId();
+        receiverId = msg.getWriter().getId();
+        priorMsg = msg.getTitle();
+    }
+}
