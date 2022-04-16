@@ -32,7 +32,7 @@
           <p>아래 정보를 기입해주세요.</p>
         </div>
 
-        <form th:action class="form auth__form" th:object="${seller}" method="post">
+        <form th:action="@{/signup}" class="form auth__form" th:object="${user}" method="post">
           <!-- Input:Text -->
           <div class="form__field">
             <label for="formInput#text"  th:text="아이디">Full Name: </label>
@@ -103,6 +103,18 @@
               placeholder="••••••••"
             />
           </div>
+          <div class="form__field">
+            <label for="formInput#text"  th:text="|사업자 등록번호|">Full Name: </label>
+            <span th:errors="*{companyId}">오류</span>
+            <input th:field="*{companyId}"
+                   class="input input--text"
+                   id="formInput#text"
+                   type="text"
+                   name="text"
+                   placeholder="전화번호를 입력해주세요."
+            />
+          </div>
+
           <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
           </div>

@@ -16,6 +16,7 @@ import heading.ground.forms.user.SellerEditForm;
 import heading.ground.forms.user.SellerSignUpForm;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
+import heading.ground.repository.user.UserRepository;
 import heading.ground.service.BookService;
 import heading.ground.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -42,66 +43,6 @@ public class SellerController {
     private final MenuRepository menuRepository;
     private final UserService userService;
     private final BookService bookService;
-
-    @GetMapping("/login")
-    public String loginForm(Model model) {
-        model.addAttribute("user", new LoginForm());
-        return "/user/login";
-    }
-
-    @GetMapping("/signup")
-    public String signUpForm(Model model) {
-        model.addAttribute("seller", new SellerSignUpForm());
-        return "/user/seller-signup";
-    }
-
-    @PostMapping("/signup")
-    public String signUp(@Validated @ModelAttribute("seller") SellerSignUpForm form,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) { //필드 에러 처리
-            return "/user/seller-signup";
-        }
-
-        if (!form.getPassword().equals(form.getPassword2())) {//비밀번호 다름(글로벌 에러 처리)
-            bindingResult.reject("NotEquals", "비밀번호가 서로 일치하지 않습니다.");
-            return "/user/seller-signup";
-        }
-
-        //이미 가입된 아이디인지 체크
-        long is_duplicated = sellerRepository.countByLoginId(form.getLoginId());
-        if (is_duplicated > 0) {//중복된 아이디임;
-            bindingResult.reject("Duplicate", "이미 가입된 아이디");
-            return "/user/seller-signup";
-        }
-
-        Seller seller = form.toEntity();
-        sellerRepository.save(seller);
-
-        return "redirect:/login";
-    }
-
-    @GetMapping("/account")     //가게 정보로 가는 메서드
-    public String account(Model model, @SessionAttribute(name = "user", required = false) BaseUser sessionSeller) {
-
-        //TODO Seller & Menu 한꺼번에 fetch Join으로 가져와서 DTO 전환
-        Seller session = (Seller) sessionSeller;
-        Seller seller = sellerRepository.findByIdWithMenu(session.getId());
-
-        SellerDto sellerDto = new SellerDto(seller);
-        List<MenuDto> menuDto = sellerDto.getMenus();
-        List<Book> books = bookService.findBooksForSeller(sellerDto.getId());
-        List<BookDto> bookDto = books.stream()
-                .map(b -> new BookDto(b))
-                .collect(Collectors.toList());
-
-        model.addAttribute("books",bookDto);
-        model.addAttribute("menus", menuDto);
-        model.addAttribute("account", sellerDto);
-
-
-        //model.addAttribute("accountId", seller.getId());
-        return "/user/account";
-    }
 
     @GetMapping("/edit/{id}")  //정보 수정 메서드
     public String editAccount(@PathVariable("id") Long id,

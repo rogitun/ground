@@ -1,10 +1,13 @@
 package heading.ground.dto.user;
 
+import heading.ground.dto.book.BookDto;
 import heading.ground.dto.post.MenuDto;
 import heading.ground.entity.ImageFile;
 import heading.ground.entity.user.Address;
 import heading.ground.entity.user.Seller;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SellerDto {
 
     private Long id;
@@ -31,6 +35,8 @@ public class SellerDto {
 
     private List<MenuDto> menus = new ArrayList<>();
 
+    private List<BookDto> books = new ArrayList<>();
+
     private String photo;
 
     public SellerDto(Seller seller) {
@@ -39,18 +45,21 @@ public class SellerDto {
         this.seats = seller.getSeats();
         this.phoneNumber = seller.getPhoneNumber();
         this.address = seller.getAddress();
-        this.sellerId = seller.getSellerId();
+        this.sellerId = seller.getCompanyId();
         this.email = seller.getEmail();
         this.desc = seller.getDesc();
         photoCheck(seller.getImageFile());
+        log.info("query tRack = {} ",seller.getMenus().size());
         if(!seller.getMenus().isEmpty()) {
             menus = seller.getMenus()
                     .stream()
                     .map(m -> new MenuDto(m))
                     .collect(Collectors.toList());
         }
+        if(!seller.getBooks().isEmpty()){
+            books = seller.getBooks().stream().map(b-> new BookDto(b)).collect(Collectors.toList());
+        }
     }
-
     public void photoCheck(ImageFile temp){
         if(temp==null){
             return;
@@ -58,8 +67,4 @@ public class SellerDto {
         this.photo = temp.getStoreName();
     }
 
-//    public String getPhotoPath(){
-//        if(photo==null) return null;
-//        return "C:/Users/kunyj/Desktop/스프링토이프로젝트/headingToGround/ground/src/main/resources/static/files/" + photo;
-//    }
 }

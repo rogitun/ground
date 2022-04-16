@@ -29,5 +29,6 @@ public class BaseUser extends Base {
 
     protected String email;
 
-    protected boolean isAdmin;
+   protected String phoneNumber;
+
 }

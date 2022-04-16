@@ -14,6 +14,7 @@ import heading.ground.forms.user.SellerEditForm;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.repository.user.StudentRepository;
+import heading.ground.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +36,7 @@ public class UserService {
     private final SellerRepository sellerRepository;
     private final FileRepository fileRepository;
     private final FileStore fileStore;
+    private final UserRepository userRepository;
 
     public BaseUser logIn(String loginId, String password) {
         Optional<Student> isStudent = studentRepository.findByLoginId(loginId);
@@ -80,13 +83,12 @@ public class UserService {
 
     public Page<SellerDto> page(int s, int size) {
         PageRequest pageRequest = PageRequest.of(s, size);
-        Page<Seller> all = sellerRepository.findAll(pageRequest);
+        Page<Seller> all = userRepository.findAll(pageRequest);
         return all.map(se -> new SellerDto(se));
     }
 
     public Paging pageTemp(Page<SellerDto> page){
         return new Paging(page.getTotalPages(), page.getNumber());
     }
-
 
 }

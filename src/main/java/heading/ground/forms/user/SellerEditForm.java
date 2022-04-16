@@ -1,6 +1,5 @@
 package heading.ground.forms.user;
 
-import heading.ground.entity.ImageFile;
 import heading.ground.entity.user.Seller;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -45,7 +44,7 @@ public class SellerEditForm {
         this.seats = seller.getSeats();
         this.desc = seller.getDesc();
         this.email = seller.getEmail();
-        this.sellerId = seller.getSellerId();
+        this.sellerId = seller.getCompanyId();
         if(seller.getImageFile()!=null)
             this.image_present = seller.getImageFile().getOriginName();
     }

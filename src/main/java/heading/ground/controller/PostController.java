@@ -96,9 +96,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     public String singleMenu(@PathVariable("id") Long id, Model model,
-                             HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Object user = session.getAttribute("user");
+                             @SessionAttribute("user") BaseUser user) {
         CommentForm commentForm = new CommentForm();
         if (user instanceof Student)
             commentForm.setStudent(true);
