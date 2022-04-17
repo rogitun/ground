@@ -55,6 +55,8 @@
                     <h3 class="settings__title">메뉴</h3>
                     <a class="tag tag--pill tag--sub settings__btn tag--lg" th:href="@{/menus/add-menu}"><i
                             class="im im-plus"></i> 메뉴 추가</a>
+                    <a class="tag tag--pill tag--sub settings__btn tag--lg" ><i
+                            class="im im-plus"></i> 메뉴 관리</a>
                 </div>
 
                 <table class="settings__table">
@@ -124,28 +126,5 @@
             }
         });
     }
-
-<!--    function reject(bid){-->
-
-<!--      let rejectUrl = "/book/" + id + "/reject";-->
-<!--      let seller = "/seller/account"-->
-
-<!--     $.ajax({-->
-<!--            type: "post",-->
-<!--            url : acceptUrl,-->
-<!--            data: id,-->
-<!--            dataType : 'text',-->
-<!--            success: function(result){-->
-<!--                alert("예약이 거절되었습니다.");-->
-<!--                window.location.replace(seller);-->
-<!--            },-->
-<!--            error: function(error){-->
-<!--                 alert("예약 처리 과정에 문제가 발생했습니다.");-->
-<!--                window.location.replace("/");-->
-<!--            }-->
-<!--        });-->
-
-<!--    }-->
-
 </script>
 </html>

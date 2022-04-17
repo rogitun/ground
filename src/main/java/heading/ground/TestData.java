@@ -50,9 +50,14 @@ public class TestData {
         BaseSignUp a = new BaseSignUp("abcd","1234","1234","abcd","abcd@abc.com","011-0000-0000","1234123");
         BaseSignUp test = new BaseSignUp();
         BaseSignUp test2  = new BaseSignUp();
+        Menu menu = new MenuForm("김치전", 4500, "막걸리와 함께", "김치랑 밀가루").toEntity();
+
         Student student = test2.toStudent(a);
         Seller seller = test.toSeller(b);
+        menu.addSeller(seller);
+
         us.save(seller);
+        mu.save(menu);
         us.save(student);
     }
 }

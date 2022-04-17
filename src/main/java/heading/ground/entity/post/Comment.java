@@ -46,6 +46,10 @@ public class Comment extends Base {
         this.writer = student;
         menu.addStar(star);
         this.menu = menu;
+    }
 
+    @PreRemove
+    public void delComment(){
+        this.menu.delStar(star);
     }
 }

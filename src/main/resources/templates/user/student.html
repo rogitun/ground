@@ -14,7 +14,8 @@
     <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}"/>
     <!-- Dev Search UI -->
     <link rel="stylesheet" th:href="@{/styles/app.css}"/>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>MyAccount</title>
 </head>
 
@@ -30,8 +31,8 @@
                 <div class="card text-center">
                     <div class="card__body dev">
                         <a class="tag tag--pill tag--main settings__btn" th:href="@{/edit/{id}(id=${student.id})}">
-                             <i class="im im-edit"></i>정보 수정</a>
-                        <img class="avatar avatar--xl dev__avatar"  th:src="@{/images/user.png}"/>
+                            <i class="im im-edit"></i>정보 수정</a>
+                        <img class="avatar avatar--xl dev__avatar" th:src="@{/images/user.png}"/>
                         <h2 class="dev__name" th:text="${student.name}">이름</h2>
                         <p class="dev__title" th:text="${student.email}">이메일</p>
                     </div>
@@ -46,24 +47,24 @@
                 <table class="settings__table">
                     <tr th:each="b : ${books}">
                         <div th:if="${b.status()=='pending'}">
-                        <td class="settings__thumbnail">
-                            <a th:href="@{/seller/{id}(id=${b.seller.id})}">
-                                <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|" />
-                                <img  th:unless="${b.seller.photo}" th:src="@{/images/default_food.png}"/>
-                            </a>
-                        </td>
-                        <td class="settings__tableInfo">
-                            <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.seller.name}">가게이름</a>
-                            <p th:text="|총 가격 : ${b.totalPrice}|">가격</p>
-                            <p th:text="|예약 일시 : ${b.bookTime}|"></p>
-                            <p th:text="|진행 상황 : ${b.status}|">처리현황</p>
-                            <p th:text="${b.type}">방문타입</p>
-                        </td>
-                        <td class="settings__tableActions" th:unless="${b.status() == 'canceled'}">
-                            <a class="tag tag--pill tag--main settings__btn" th:unless="${b.status()=='accept'}" href="#"><i class="im im-edit"></i>예약 수정</a>
-                            <a class="tag tag--pill tag--main settings__btn" href="#"><i
-                                    class="im im-x-mark-circle-o"></i>취소 신청</a>
-                        </td>
+                            <td class="settings__thumbnail">
+                                <a th:href="@{/seller/{id}(id=${b.seller.id})}">
+                                    <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|"/>
+                                    <img th:unless="${b.seller.photo}" th:src="@{/images/default_food.png}"/>
+                                </a>
+                            </td>
+                            <td class="settings__tableInfo">
+                                <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.seller.name}">가게이름</a>
+                                <p th:text="|총 가격 : ${b.totalPrice}|">가격</p>
+                                <p th:text="|예약 일시 : ${b.bookTime}|"></p>
+                                <p th:text="|진행 상황 : ${b.status}|">처리현황</p>
+                                <p th:text="${b.type}">방문타입</p>
+                            </td>
+                            <td class="settings__tableActions" th:unless="${b.status() == 'canceled'}">
+                                <a class="tag tag--pill tag--main settings__btn"><i class="im im-edit"></i>예약 상세</a>
+                                <a class="tag tag--pill tag--main settings__btn" th:onclick="|check('${b.id}')|">
+                                    <i class="im im-x-mark-circle-o"></i>취소 신청</a>
+                            </td>
                         </div>
                     </tr>
                 </table>
@@ -75,18 +76,18 @@
                 <table class="settings__table">
                     <tr th:each="b : ${books}">
                         <div th:unless="${b.status() == 'pending'}">
-                        <td class="settings__thumbnail">
-                            <a th:href="@{/seller/{id}(id=${b.seller.id})}">
-                                <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|" />
-                                <img  th:unless="${b.seller.photo}" th:src="@{/images/default_food.png}"/>
-                            </a>
-                        </td>
-                        <td class="settings__tableInfo">
-                            <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.seller.name}">가게이름</a>
-                            <p th:text="|예약 일시 : ${b.bookTime}|"></p>
-                            <p th:text="|진행 상황 : ${b.status}|"></p>
-                            <p th:text="|사유 : ${b.reason}|"></p>
-                        </td>
+                            <td class="settings__thumbnail">
+                                <a th:href="@{/seller/{id}(id=${b.seller.id})}">
+                                    <img th:if="${b.seller.photo}" th:src="|/image/${b.seller.photo}|"/>
+                                    <img th:unless="${b.seller.photo}" th:src="@{/images/default_food.png}"/>
+                                </a>
+                            </td>
+                            <td class="settings__tableInfo">
+                                <a th:href="@{/book/{id}(id=${b.id})}" th:text="${b.seller.name}">가게이름</a>
+                                <p th:text="|예약 일시 : ${b.bookTime}|"></p>
+                                <p th:text="|진행 상황 : ${b.status}|"></p>
+                                <p th:text="|사유 : ${b.reason}|"></p>
+                            </td>
                         </div>
                     </tr>
                 </table>
@@ -95,5 +96,27 @@
     </div>
 </main>
 </body>
+<script th:inline="javascript">
+    function check(bid){
+        let cancelUrl = "/book/" + bid + "/cancel";
+        console.log("test1");
+        let flag = "no";
+        if(!confirm("정말 취소하시겠어요?")){
+            return;
+        }
+        $.ajax({
+           type: "post",
+           url : cancelUrl,
+           success: function(result){
+                alert("예약이 취소되었습니다."),
+                window.location.replace("/profile");
+           },
+           error : function(error){
+                alert("잠시 후에 다시 시도해주세요.");
+           }
+         });
+    }
+
+</script>
 
 </html>

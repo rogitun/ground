@@ -70,4 +70,10 @@ public class BookController {
         return "redirect:/profile";
     }
 
+    @PostMapping("/{id}/cancel")
+    public String bookCancel(@PathVariable("id") Long id){
+        bookService.rejectBook(id,"사용자가 예약 취소");
+        return "redirect:/profile";
+    }
+
 }

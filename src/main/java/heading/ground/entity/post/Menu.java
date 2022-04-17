@@ -33,6 +33,8 @@ public class Menu extends Base {
 
     private int star;
 
+    private boolean outOfStock;
+
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private ImageFile image;
 
@@ -71,6 +73,10 @@ public class Menu extends Base {
 
     public void addStar(int num) {
         star+=num; commentNumber++;
+    }
+
+    public void delStar(int num){
+        star-=num; commentNumber--;
     }
 
 }

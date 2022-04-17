@@ -14,7 +14,8 @@
     <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}"/>
     <!-- Dev Search UI -->
     <link rel="stylesheet" th:href="@{/styles/app.css}"/>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>메뉴 세부정보</title>
     <style>
       .field-error {
@@ -60,7 +61,7 @@
                             <textarea class="input input--textarea" name="message" id="formInput#textarea"
                                       th:field="*{desc}"
                                       placeholder="댓글을 입력해주세요."></textarea>
-                            <div th:class="field-error" th:if="${hasError}" onload="init()" }></div>
+                            <div th:class="field-error" th:if="${hasError}"}></div>
                         </div>
 
                         <input class="btn btn--sub btn--lg" type="submit" value="Comments"/>
@@ -87,10 +88,10 @@
                                 <p class="comment__info" th:text="${c.desc}"></p>
                                 <p class="tag tag--pill tag--main settings__btn" th:text="|${c.star}점|"></p>
                                 <a class="tag tag--pill tag--main settings__btn" href=""><i class="im im-edit"></i>Reply</a>
-                                <a class="tag tag--pill tag--main settings__btn" th:href="@{/menus/del/{id}(id=${c.id})}"><i class="im im-x-mark-circle-o"></i>Del</a>
+<!--                                <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" th:href="@{/menus/del/{id}(id=${c.id})}"><i class="im im-x-mark-circle-o"></i>Del</a>-->
+                                <a class="tag tag--pill tag--main settings__btn" th:onclick="|delComment('${c.id}','${menu.id}')|"><i class="im im-x-mark-circle-o"></i>DelAjax</a>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -100,8 +101,29 @@
 </main>
 </body>
 <script th:inline="javascript">
-    function init(){
-        alert("hi");
+    function delComment(cid,bid){
+        if(!confirm("정말 삭제하시겠습니까?")){
+            return;
+        }
+        let backUrl = "/menus/" + bid;
+        let postUrl = "/menus/del/" + cid;
+
+        console.log(backUrl);
+        console.log(postUrl);
+
+        $.ajax({
+            type : "post",
+            url : postUrl,
+            success: function(result){
+                alert("댓글이 삭제되었습니다.");
+                window.location.replace(backUrl);
+            },
+            error : function(error){
+                alert("댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.");
+            }
+        });
+
+
     }
 </script>
 </html>

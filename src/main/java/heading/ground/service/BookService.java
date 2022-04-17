@@ -72,4 +72,5 @@ public class BookService {
         book.bookReject(reason);
         bookedMenuRepository.deleteAllInBatch(bookedMenus);
     }
+
 }
