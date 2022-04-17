@@ -3,10 +3,13 @@ package heading.ground.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.PreRemove;
+import java.io.File;
 
 @Entity
 @NoArgsConstructor
@@ -25,4 +28,11 @@ public class ImageFile {
         this.originName = uploadName;
         this.storeName = storeName;
     }
+
+    @PreRemove
+    public void deleteImageFile(){
+        File file = new File(FileConst.Dir + this.storeName);
+        file.delete();
+    }
+
 }

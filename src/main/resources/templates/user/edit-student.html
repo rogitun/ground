@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon" />
+    <!-- Icon - IconMonster -->
+    <link rel="stylesheet" href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css" />
+    <!-- Mumble UI -->
+    <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}" />
+    <!-- Dev Search UI -->
+    <link rel="stylesheet" th:href="@{/styles/app.css}" />
+
+    <title>사업자 정보 수정</title>
+    <style>
+      .field-error {
+ border-color: #dc3545;
+ color: #dc3545;
+    </style>
+</head>
+
+<body>
+
+<div th:replace="main/nav :: header"></div>
+
+
+<main class="formPage my-xl">
+
+    <div class="content-box">
+        <div class="formWrapper">
+            <a class="backButton" href="#"><i class="im im-angle-left"></i></a>
+            <br>
+            <form class="form" method="post" th:object="${user}" th:action="@{/edit-student/{id}(id=${user.id})}">
+                <!-- Input:Text -->
+                <input th:field="*{id}" th:value="*{id}" readonly hidden>
+                <div class="form__field">
+                    <label for="formInput#text">이름</label>
+                    <input class="input input--text" id="formInput#text" type="text" name="text" th:field="*{name}"
+                           placeholder="Enter text" th:value="*{name}"/>
+                    <div class="field-error" th:errors="*{name}"></div>
+                </div>
+                <!-- Input:Text -->
+                <div class="form__field">
+                    <label for="formInput#text">전화번호 </label>
+                    <input class="input input--text" type="text" name="text" th:field="*{phoneNumber}"
+                           placeholder="Enter text" th:value="*{phoneNumber}"/>
+                    <div class="field-error" th:errors="*{phoneNumber}"></div>
+                </div>
+                <div class="form__field">
+                    <label for="formInput#text">이메일 </label>
+                    <input class="input input--text" type="text" name="text" th:field="*{email}"
+                           placeholder="Enter text" th:value="*{email}"/>
+                    <div class="field-error" th:errors="*{email}"></div>
+                </div>
+
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+    </main>
+</body>
+
+</html>

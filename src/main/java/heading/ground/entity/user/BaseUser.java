@@ -1,6 +1,7 @@
 package heading.ground.entity.user;
 
 import heading.ground.entity.Base;
+import heading.ground.forms.user.SellerEditForm;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,8 +28,11 @@ public class BaseUser extends Base {
 
     protected String name; // 이름(가게이름, 학생 별명)
 
-    protected String email;
-
    protected String phoneNumber;
+
+    public void update(SellerEditForm form){
+        this.name = form.getName();
+        this.phoneNumber = form.getPhoneNumber();
+    }
 
 }

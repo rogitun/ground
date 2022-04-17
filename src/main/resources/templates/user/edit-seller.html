@@ -36,20 +36,13 @@
 
                 <form class="form" method="post" th:object="${seller}" enctype="multipart/form-data">
                     <!-- Input:Text -->
+                    <input th:field="*{id}" th:value="*{id}" readonly hidden>
                     <div class="form__field">
                         <label for="formInput#text">가게 이름</label>
                         <input class="input input--text" id="formInput#text" type="text" name="text" th:field="*{name}"
                             placeholder="Enter text" th:value="*{name}"/>
                         <div class="field-error" th:errors="*{name}"></div>
                     </div>
-
-                    <!-- Input:Text -->
-                    <div class="form__field">
-                        <label for="formInput#text">좌석 수 </label>
-                        <input class="input input--text" type="text" name="text"  th:field="*{seats}"
-                            placeholder="Enter text" th:value="*{seats}"/>
-                    </div>
-
                     <!-- Input:Text -->
                     <div class="form__field">
                         <label for="formInput#text">전화번호 </label>

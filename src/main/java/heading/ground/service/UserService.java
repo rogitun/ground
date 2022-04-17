@@ -11,6 +11,7 @@ import heading.ground.entity.user.Student;
 import heading.ground.file.FileRepository;
 import heading.ground.file.FileStore;
 import heading.ground.forms.user.SellerEditForm;
+import heading.ground.forms.user.UserEditForm;
 import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.repository.user.StudentRepository;
@@ -62,24 +63,30 @@ public class UserService {
 
     @Transactional
     public Seller updateSeller(Long id, SellerEditForm form) throws IOException {
-        Seller seller = sellerRepository.findById(id).get();
-        seller.update(form);
-        if (!form.getImageFile().isEmpty()) {
-            log.info("service Update = {}", form);
+        Seller seller = userRepository.findSellerWithImage(id);
+
+        if(form.getDesc().isBlank() && form.getImageFile()==null && form.getSellerId().isBlank())
+            seller.update(form);
+
+        else{
+            seller.updateSeller(form);
             if (seller.getImageFile() != null) { //이미 가진 사진이 있다면? -> 해당 사진 엔티티 찾고 파일 삭제 후 엔티티 삭제
-                //storeName으로 delete
                 String storeName = seller.getImageFile().getStoreName();
-                fileStore.deleteImage(storeName);
                 fileRepository.deleteByStoreName(storeName);
             }
             ImageFile imageFile = fileStore.storeFile(form.getImageFile());
             seller.updateImage(imageFile);
         }
-        //TODO 사진이 다르면 기존의 사진 delete -> 해당 사진 엔티티 찾고 파일 삭제 후 엔티티 삭제
-
-
         return seller;
     }
+
+    @Transactional
+    public Student updateStudent(Long id, UserEditForm form){
+        Student student = userRepository.findStudentById(id);
+        student.update(form);
+        return student;
+    }
+
 
     public Page<SellerDto> page(int s, int size) {
         PageRequest pageRequest = PageRequest.of(s, size);

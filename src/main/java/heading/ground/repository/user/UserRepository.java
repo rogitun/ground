@@ -6,6 +6,7 @@ import heading.ground.entity.user.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,8 +15,8 @@ public interface UserRepository extends JpaRepository<BaseUser,Long> {
 
     long countByLoginId(@Param("loginId") String loginId);
 
-    @Query("select u.name from BaseUser u " +
-            "where u.id = :uid")
+    @Query("select s.name from Seller s " +
+            "where s.id = :uid")
     String findSellerById(@Param("uid") Long id);
 
     @Query("select distinct s from Seller s " +
@@ -29,6 +30,13 @@ public interface UserRepository extends JpaRepository<BaseUser,Long> {
     countQuery = "select count(s) from Seller s")
     Page<Seller> findAll(PageRequest pageRequest);
 
+
+    @Query("select s from Seller s " +
+            "left join fetch s.imageFile i " +
+            "where s.id = :uid")
+    Seller findSellerWithImage(@Param("uid") Long id);
+
+
     //TODO 아래는 Student
 
     @Query("select distinct s from Student s " +
@@ -36,5 +44,8 @@ public interface UserRepository extends JpaRepository<BaseUser,Long> {
             "where s.id = :uid")
     Student findStudentByIdForAccount(@Param("uid") Long id);
 
+    @Query("select s from Student s " +
+            "where s.id = :uid")
+    Student findStudentById(@Param("uid") Long id);
 
 }

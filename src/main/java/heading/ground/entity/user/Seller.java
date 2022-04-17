@@ -20,18 +20,6 @@ import java.util.Set;
 @Getter
 public class Seller extends BaseUser{
 
-//    @Id
-//    @GeneratedValue
-//    private Long id;
-
-//    private String loginId;
-//    private String password;
-
-    //    private String email;
-//    private boolean isAdmin;
-
-    private int seats; //좌석 수
-
     @Embedded
     private Address address; //주소
 
@@ -61,17 +49,14 @@ public class Seller extends BaseUser{
         this.password = sf.getPassword();
         this.name = sf.getName();
         this.phoneNumber = sf.getPhoneNumber();
-        this.email = sf.getEmail();
         this.companyId = sf.getCompanyId();
         this.isAdmin = true;
     }
 
-    public void update(SellerEditForm form){
+    public void updateSeller(SellerEditForm form){
         this.name = form.getName();
         this.phoneNumber = form.getPhoneNumber();
-        this.seats = form.getSeats();
         this.desc = form.getDesc();
-        this.email = form.getEmail();
         this.companyId = form.getSellerId();
     }
 

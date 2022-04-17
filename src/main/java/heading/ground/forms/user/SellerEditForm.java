@@ -7,18 +7,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 public class SellerEditForm {
 
+    private Long id;
     @NotBlank
+    @Length(max = 16)
     private String name; //가게 이름
 
-    @Length(max = 13)
     @NotBlank
+    @Pattern(regexp = "^\\d{2,4}-\\d{3,4}-\\d{4}$",message = "00/000-0000-0000 형태로 입력해주세요")
     private String phoneNumber; //가게 전화번호
-
-    private int seats; //설정 안해도 ㄱㅊ;
 
     @Length(max = 256)
     @NotBlank
@@ -28,22 +29,15 @@ public class SellerEditForm {
 
     private String image_present;
 
-    @Email
-    private String email;
-
     @NotBlank
     private String sellerId;
 
-    //TODO
-    //이미지 필드 필요합니다.
-
     public SellerEditForm(){}
     public SellerEditForm(Seller seller) {
+        this.id = seller.getId();
         this.name = seller.getName();
         this.phoneNumber = seller.getPhoneNumber();
-        this.seats = seller.getSeats();
         this.desc = seller.getDesc();
-        this.email = seller.getEmail();
         this.sellerId = seller.getCompanyId();
         if(seller.getImageFile()!=null)
             this.image_present = seller.getImageFile().getOriginName();

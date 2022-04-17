@@ -46,7 +46,7 @@ public class BookController {
         Long l = Long.parseLong(id);
         log.info("id = {} ",id);
         bookService.process(l,true);
-        return "redirect:/seller/account";
+        return "redirect:/profile";
     }
 
 
@@ -67,7 +67,7 @@ public class BookController {
         //TODO book에 거절 사유 update + 연관된 bookedMenus 삭제 + book.status = Canceled
         bookService.rejectBook(id,reason);
 
-        return "redirect:/seller/account";
+        return "redirect:/profile";
     }
 
 }

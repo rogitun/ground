@@ -74,7 +74,7 @@ public class PostController {
         Seller se = (Seller) seller;
         postService.addMenu(form, se);
 
-        return "redirect:/seller/account";
+        return "redirect:/profile";
     }
 
     @GetMapping("/{id}/edit")
@@ -91,7 +91,7 @@ public class PostController {
                            @PathVariable("id") Long id) throws IOException {
         Menu menu = menuRepository.findById(id).get();
         postService.updateMenu(menu, form);
-        return "redirect:/seller/account";
+        return "redirect:/profile";
     }
 
     @GetMapping("/{id}")

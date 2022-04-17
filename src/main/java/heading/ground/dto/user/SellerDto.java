@@ -42,11 +42,9 @@ public class SellerDto {
     public SellerDto(Seller seller) {
         this.id = seller.getId();
         this.name = seller.getName();
-        this.seats = seller.getSeats();
         this.phoneNumber = seller.getPhoneNumber();
         this.address = seller.getAddress();
         this.sellerId = seller.getCompanyId();
-        this.email = seller.getEmail();
         this.desc = seller.getDesc();
         photoCheck(seller.getImageFile());
         log.info("query tRack = {} ",seller.getMenus().size());

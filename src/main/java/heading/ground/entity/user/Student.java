@@ -4,6 +4,7 @@ import heading.ground.entity.book.Book;
 import heading.ground.entity.post.Comment;
 import heading.ground.forms.user.BaseSignUp;
 import heading.ground.forms.user.StudentForm;
+import heading.ground.forms.user.UserEditForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,19 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Student extends BaseUser {
 
-//    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    @Column(name = "student_id")
-//    private Long id;
-
-//    private String loginId;
-//
-//    private String password;
-//
-//    private String name;
-//
-//    private String email;
-//
-//    private boolean isAdmin;
+    private String email;
 
     @OneToMany(mappedBy = "writer",cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
@@ -36,11 +25,18 @@ public class Student extends BaseUser {
     @OneToMany(mappedBy = "student")
     private List<Book> books = new ArrayList<>();
 
+    //테스트 용도임
     public Student(BaseSignUp std) {
             this.loginId = std.getLoginId();
             this.password = std.getPassword();
             this.name = std.getName();
             this.email = std.getEmail();
             this.phoneNumber = std.getPhoneNumber();
+    }
+
+    public void update(UserEditForm form){
+        name = form.getName();
+        email = form.getEmail();
+        phoneNumber = form.getPhoneNumber();
     }
 }

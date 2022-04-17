@@ -32,7 +32,7 @@
                 <div class="card text-center">
                     <div class="card__body dev">
                         <a class="tag tag--pill tag--main settings__btn"
-                           th:href="@{/seller/edit/{id}(id=${account.id})}"><i class="im im-edit"></i>정보 수정</a>
+                           th:href="@{/edit/{id}(id=${account.id})}"><i class="im im-edit"></i>정보 수정</a>
                         <img class="avatar avatar--xl dev__avatar" th:if="${account.photo}"
                              th:src="|/image/${account.photo}|"/>
                         <img class="avatar avatar--xl dev__avatar" th:unless="${account.photo}"
