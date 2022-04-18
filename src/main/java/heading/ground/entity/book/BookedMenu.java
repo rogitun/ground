@@ -15,7 +15,7 @@ public class BookedMenu {
     @Id @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "book_id")
     private Book book;
 

@@ -35,6 +35,8 @@ public class Menu extends Base {
 
     private boolean outOfStock;
 
+    private boolean isBest;
+
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private ImageFile image;
 
@@ -46,10 +48,8 @@ public class Menu extends Base {
     @OneToMany(mappedBy = "menu",cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "menu",cascade = CascadeType.REMOVE) //필요한가?
+    @OneToMany(mappedBy = "menu",cascade = CascadeType.REMOVE)
     private List<BookedMenu> bookedMenus = new ArrayList<>();
-
-
 
     public Menu(MenuForm form) {
         updateField(form);
@@ -79,4 +79,11 @@ public class Menu extends Base {
         star-=num; commentNumber--;
     }
 
+    public void setStock() {
+        this.outOfStock = this.outOfStock ? false :  true;
+    }
+
+    public void setBest() {
+        this.isBest = this.isBest ? false :  true;
+    }
 }

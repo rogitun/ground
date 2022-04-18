@@ -15,6 +15,7 @@ import heading.ground.repository.post.MenuRepository;
 import heading.ground.repository.user.SellerRepository;
 import heading.ground.repository.user.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 //글과 댓글(리뷰)등을 관리하는 서비스
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -82,4 +84,17 @@ public class PostService {
     public Paging pageTemp(Page<MenuDto> page){
         return new Paging(page.getTotalPages(), page.getNumber());
     }
+
+    @Transactional
+    public void setMenuStatus(Long id, String flag) {
+        Menu menu = menuRepository.findById(id).get();
+        log.info("service in");
+        if(flag.equals("best")) {
+            menu.setBest();
+        }
+        else if(flag.equals("stock")) {
+            menu.setStock();
+        }
+    }
+
 }

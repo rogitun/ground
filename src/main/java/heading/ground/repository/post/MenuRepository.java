@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MenuRepository extends JpaRepository<Menu,Long> {
 
@@ -15,8 +16,18 @@ public interface MenuRepository extends JpaRepository<Menu,Long> {
 
     @Query("select m from Menu m " +
             "where m.seller.id in :id")
-    List<Menu> selectNameBySeller(@Param("id") Long id);
+    List<Menu> selectMenuBySeller(@Param("id") Long id);
 
     Menu findByName(String name);
 
+    @Query("select m from Menu m " +
+            "join fetch m.seller s " +
+            "where s.id = :sid")
+    List<Menu> findMenusBySellerId(@Param("sid") Long id);
+
+    @Query("select m from Menu m " +
+            "join fetch m.seller s " +
+            "where s.id = :sid and " +
+            "m.id = :mid")
+    Optional<Menu> findMenuByIdWithSeller(@Param("mid") Long id, @Param("sid") Long sid);
 }

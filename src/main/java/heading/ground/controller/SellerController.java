@@ -87,17 +87,18 @@ public class SellerController {
         SellerDto sellerDto = new SellerDto(seller);
         model.addAttribute("seller", sellerDto);
 
+
         return "user/seller";
     }
 
-    @GetMapping("/{id}/book")
+    @GetMapping("/{id}/book") //예약 폼
     public String bookForm(@PathVariable("id") Long id, Model model,
                            @SessionAttribute("user") BaseUser std) {
         if (!(std instanceof Student)) {
             return "redirect:/seller/" + id;
         }
 
-        List<Menu> menuList = menuRepository.selectNameBySeller(id);
+        List<Menu> menuList = menuRepository.selectMenuBySeller(id);
         List<MenuListDto> menus = menuList.stream().map(m -> new MenuListDto(m)).collect(Collectors.toList());
 
         model.addAttribute("form", menus);
