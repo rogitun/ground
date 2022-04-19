@@ -75,6 +75,7 @@
         let t = document.getElementsByName('type');
 
         let bookUrl = "/seller/"+ [[${sellerId}]] + "/book";
+        let nextUrl = "/seller/" + [[${sellerId}]];
 
         let payment;
         let type;
@@ -117,8 +118,8 @@
                 window.location.replace(profile);
             },
             error: function(error){
-                 alert("예약 실패");
-                window.location.replace("/");
+                alert("예약 실패(메뉴가 품절되었을 수 도 있습니다.)");
+                window.location.replace(nextUrl);
             }
         });
     }

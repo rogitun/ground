@@ -30,4 +30,17 @@ public interface MenuRepository extends JpaRepository<Menu,Long> {
             "where s.id = :sid and " +
             "m.id = :mid")
     Optional<Menu> findMenuByIdWithSeller(@Param("mid") Long id, @Param("sid") Long sid);
+
+    @Query("select m from Menu m " +
+            "left join fetch m.comments c " +
+            "left join fetch c.writer w " +
+            "join fetch m.seller s " +
+            "where m.id = :mid")
+    Optional<Menu> findMenuByIdWithCoSe(@Param("mid") Long mid);
+
+
+    @Query("select count(m) from Menu m " +
+            "where m.outOfStock = false " +
+            "and m.seller.id =:sid")
+    long countStock(@Param("sid") Long id);
 }

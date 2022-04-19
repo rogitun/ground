@@ -21,7 +21,11 @@ public class MenuDto {
     private int commentNumber;
     private int star;
 
-    //storeName으로 저장 -> uuid이름
+    private boolean isBest;
+
+    private boolean isOut;
+
+    //storeName으로 저장
     private String image;
 
     public MenuDto(Menu menu) {
@@ -32,6 +36,8 @@ public class MenuDto {
         this.sources = menu.getSources();
         this.seller = menu.getSeller().getName();
         this.star = menu.getStar();
+        this.isBest = menu.isBest();
+        this.isOut = menu.isOutOfStock();
         this.commentNumber = menu.getCommentNumber();
         if(menu.getImage()!=null){
             this.image = menu.getImage().getStoreName();

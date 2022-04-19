@@ -36,6 +36,12 @@ public interface UserRepository extends JpaRepository<BaseUser,Long> {
             "where s.id = :uid")
     Seller findSellerWithImage(@Param("uid") Long id);
 
+    @Query("select s from Seller s " +
+            "left join fetch s.menus m " +
+            "left join fetch m.comments c " +
+            "where s.id = :uid")
+    Seller findByIdWithMenuComment(@Param("uid") Long id);
+
 
     //TODO 아래는 Student
 

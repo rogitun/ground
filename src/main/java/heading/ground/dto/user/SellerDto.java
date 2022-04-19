@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class SellerDto {
 
     private Long id;
@@ -58,6 +58,24 @@ public class SellerDto {
             books = seller.getBooks().stream().map(b-> new BookDto(b)).collect(Collectors.toList());
         }
     }
+
+    public void setSellerWithMenus(Seller seller){
+        this.id = seller.getId();
+        this.name = seller.getName();
+        this.phoneNumber = seller.getPhoneNumber();
+        this.address = seller.getAddress();
+        this.sellerId = seller.getCompanyId();
+        this.desc = seller.getDesc();
+        photoCheck(seller.getImageFile());
+        log.info("query tRack = {} ",seller.getMenus().size());
+        if(!seller.getMenus().isEmpty()) {
+            menus = seller.getMenus()
+                    .stream()
+                    .map(m -> new MenuDto(m))
+                    .collect(Collectors.toList());
+        }
+    }
+
     public void photoCheck(ImageFile temp){
         if(temp==null){
             return;

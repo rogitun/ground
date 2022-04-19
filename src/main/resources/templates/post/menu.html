@@ -88,8 +88,7 @@
                                 <p class="comment__info" th:text="${c.desc}"></p>
                                 <p class="tag tag--pill tag--main settings__btn" th:text="|${c.star}점|"></p>
                                 <a class="tag tag--pill tag--main settings__btn" href=""><i class="im im-edit"></i>Reply</a>
-<!--                                <a class="tag tag&#45;&#45;pill tag&#45;&#45;main settings__btn" th:href="@{/menus/del/{id}(id=${c.id})}"><i class="im im-x-mark-circle-o"></i>Del</a>-->
-                                <a class="tag tag--pill tag--main settings__btn" th:onclick="|delComment('${c.id}','${menu.id}')|"><i class="im im-x-mark-circle-o"></i>DelAjax</a>
+                                <a class="tag tag--pill tag--main settings__btn" th:if="${session.user != null && session.user.getId() == c.writerId}" th:onclick="|delComment('${c.id}','${menu.id}')|"><i class="im im-x-mark-circle-o"></i>DelAjax</a>
                             </div>
                         </div>
                     </div>

@@ -15,7 +15,8 @@
   <link rel="stylesheet" th:href="@{/uikit/styles/uikit.css}" />
   <!-- Dev Search UI -->
   <link rel="stylesheet" th:href="@{/styles/app.css}" />
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <title>가게정보</title>
 </head>
 
@@ -37,8 +38,10 @@
               <h2 class="dev__name" th:text="${seller.name}">가게이름</h2>
               <p class="dev__title" th:text="${seller.phoneNumber}">전화번호</p>
               <p class="dev__location" th:text="TODO">가게위치</p>
-              <a th:href="@{/{id}/message(id=${seller.id})}" class="btn btn--sub btn--lg">문의하기</a>
-              <a th:href="@{/seller/{id}/book(id=${seller.id})}" class="btn btn--sub btn--lg">예약하기</a>
+              <span th:if="${session.user !=null && session.user instanceof T(heading.ground.entity.user.Student)}">
+                <a th:href="@{/{id}/message(id=${seller.id})}" class="btn btn--sub">문의하기</a>
+              <a th:onclick="|book('${seller.id}')|" class="btn btn--sub">예약하기</a></span>
+
             </div>
           </div>
         </div>
@@ -50,51 +53,38 @@
             </p>
           </div>
           <div class="devInfo">
-            <h3 class="devInfo__title">인기메뉴</h3>
+            <h3 class="devInfo__title">사장님 추천 메뉴</h3>
             <div class="devInfo__skills">
-
-              <div class="devSkill">
-                <h4 class="devSkill__title">JavaScript</h4>
-                <p class="devSkill__info">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae neque voluptatum ut? Quaerat, ea
-                  cumque! Dolorum provident esse molestias commodi odit sapiente quod quasi corrupti obcaecati? Nobis
-                  ex temporibus quaerat!
-                </p>
+              <div class="devSkill" th:each="b : ${best}">
+                <h4 class="devSkill__title" th:text="${b.name}">메뉴 제목</h4>
+                <p class="devSkill__info" th:text="${b.desc}">메뉴 설명</p>
               </div>
-<!--              <h3 class="devInfo__subtitle">Other Skills</h3>-->
-<!--              <div class="devInfo__otherSkills">-->
-<!--                <span class="tag tag&#45;&#45;pill tag&#45;&#45;sub tag&#45;&#45;lg">-->
-<!--                  <small>Figma</small>-->
-<!--                </span>-->
-<!--              </div>-->
             </div>
           </div>
           <div class="devInfo">
             <h3 class="devInfo__title">메뉴</h3>
             <div class="grid grid--two">
 
-              <div class="column">
+              <div class="column" th:each="m : ${menus}">
                 <div class="card project">
-                  <a href="single-project.html" class="project">
-                    <img class="project__thumbnail" src="images/project-b.png" alt="project thumbnail" />
+                  <a th:href="@{/menus/{id}(id=${m.id})}" class="project">
+                    <img class="project__thumbnail" th:if="${m.image}" th:src="|/image/${m.image}|" alt="project thumbnail" />
+                    <img class="project__thumbnail" th:unless="${m.image}" th:src="@{/images/default_food.png}" alt="project thumbnail" />
                     <div class="card__body">
-                      <h3 class="project__title">DevSearch UI Design</h3>
-                      <p><a class="project__author" href="profile.html">By Shahriar P. Shuvo</a></p>
+                      <h3 class="project__title" th:text="${m.name}">메뉴 제목</h3>
+                      <p><a class="project__author" th:unless="${m.isOut}" th:text="|가격 : ${m.price}원|">가격</a></p>
+                      <p><a class="project__author" style="color:red" th:if="${m.isOut}" th:text="품절">가격</a></p>
                       <p class="project--rating">
-                        <span style="font-weight: bold;">92%</span> Postitive
-                        Feedback (62 Votes)
-                      </p>
+                        <span style="font-weight: bold;" th:text="|평가 : ${m.commentNumber}개|"></span></p>
                       <div class="project__tags">
                         <span class="tag tag--pill tag--main">
-                          <small>카테고리TODO</small>
+                          <small th:text="|평점 : ${m.star} 점|">카테고리TODO</small>
                         </span>
                       </div>
                     </div>
                   </a>
                 </div>
               </div>
-
-
             </div>
           </div>
         </div>
@@ -102,5 +92,27 @@
     </div>
   </main>
 </body>
+<script th:inline="javascript">
+  function book(sid){
+    if(!confirm("예약 하시겠습니까?")){
+      return;
+    }
+    let nextUrl = "/seller/" + sid + "/book";
+    let bookUrl = "/seller/" + sid + "/bookRequest";
+
+    $.ajax({
+      type : 'get',
+      url : bookUrl,
+      success: function(result){
+          window.location.replace(nextUrl);
+      },
+      error : function(error){
+        alert("현재 예약 가능한 메뉴가 없습니다.");
+        window.location.reload();
+      }
+    });
+  }
+
+</script>
 
 </html>

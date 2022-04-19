@@ -1,5 +1,6 @@
 package heading.ground.service;
 
+import heading.ground.dto.book.MenuListDto;
 import heading.ground.entity.book.Book;
 import heading.ground.entity.book.BookedMenu;
 import heading.ground.entity.post.Menu;
@@ -36,6 +37,7 @@ public class BookService {
         List<BookedMenu> bookedMenus = new ArrayList<>();
         for (MenuSet menuSet : form) {
             Menu byName = menuRepository.findByName(menuSet.getName());
+            if(byName.isOutOfStock()) return null;
             bookedMenus.add(new BookedMenu(byName, menuSet.getQuantity()));
         }
         return bookedMenus;
@@ -73,4 +75,11 @@ public class BookService {
         bookedMenuRepository.deleteAllInBatch(bookedMenus);
     }
 
+    public long checkStock(List<MenuListDto> menus) {
+        return menus.stream().filter(m -> !(m.isOut())).count();
+    }
+
+    public long findStock(Long id) {
+        return menuRepository.countStock(id);
+    }
 }

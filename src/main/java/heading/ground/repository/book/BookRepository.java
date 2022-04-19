@@ -38,8 +38,5 @@ public interface BookRepository extends JpaRepository<Book,Long> {
             "join fetch b.seller s " +
             "where s.id = :pid")
     Optional<Book> findBookWithSeller(@Param("pid") Long id);
-
-
-
-
+    
 }

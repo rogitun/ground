@@ -119,15 +119,15 @@ public class PostController {
         if (user instanceof Student)
             commentForm.setStudent(true);
 
-        Optional<Menu> optional = menuRepository.findById(id);
+        Optional<Menu> optional = menuRepository.findMenuByIdWithCoSe(id);
         if(optional.isEmpty())
             return "redirect:/";
         Menu entity = optional.get();
         MenuDto menu = new MenuDto(entity);
 
         //댓글 목록 가져오기
-        List<Comment> comments = commentRepository.findByMenuId(entity.getId());
-        if (comments != null) {
+        List<Comment> comments = entity.getComments();
+        if (comments !=null) {
             List<CommentDto> commentDtos = comments.stream()
                     .map(c -> new CommentDto(c))
                     .collect(Collectors.toList());
@@ -198,8 +198,13 @@ public class PostController {
     }
 
     @PostMapping("/comment/{id}")
-    public String delComment(@PathVariable("id") Long id){
-        commentRepository.deleteById(id);
+    public String delComment(@PathVariable("id") Long id,
+                             @SessionAttribute("user") BaseUser sei){
+        //TODO comment - User 같이
+        Optional<Comment> comment = commentRepository.findByIdWithUser(id, sei.getId());
+        if(comment.isEmpty())
+            return "/"; //TODO 잘못된 접근 처리하기
+        commentRepository.delete(comment.get());
         return "redirect:/menus";
     }
 

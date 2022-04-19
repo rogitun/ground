@@ -28,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 public class SellerController {
 
     private final SellerRepository sellerRepository;
+    private final UserRepository userRepository;
     private final MenuRepository menuRepository;
     private final UserService userService;
     private final BookService bookService;
@@ -83,24 +85,43 @@ public class SellerController {
 
     @GetMapping("/{id}")
     public String sellerInfo(@PathVariable("id") Long id, Model model) {
-        Seller seller = sellerRepository.findById(id).get();
-        SellerDto sellerDto = new SellerDto(seller);
-        model.addAttribute("seller", sellerDto);
+        //Seller seller = sellerRepository.findById(id).get();
+        //TODO Seller + Menu + Comment
+        Seller seller = userRepository.findByIdWithMenuComment(id);
+        SellerDto sellerDto = new SellerDto();
+        sellerDto.setSellerWithMenus(seller);
+        //SellerDto sellerDto = new SellerDto(seller);
+        List<MenuDto> menus = sellerDto.getMenus();
+        List<MenuDto> best = menus.stream().filter(m -> m.isBest()).collect(Collectors.toList());
 
+        model.addAttribute("seller", sellerDto);
+        model.addAttribute("menus", menus);
+        model.addAttribute("best", best);
+        //TODO 메뉴도 같이 보여줘야 합니다.
 
         return "user/seller";
     }
 
+    @GetMapping("/{id}/bookRequest") //예약 폼
+    public void bookRequest(@PathVariable("id") Long id,
+                           HttpServletResponse response) throws IOException {
+        long l = bookService.findStock(id);
+        log.info("size =  {}",l);
+        if (l <= 0) {
+            response.sendError(500,"데이터 없음");
+        }
+    }
+
     @GetMapping("/{id}/book") //예약 폼
     public String bookForm(@PathVariable("id") Long id, Model model,
-                           @SessionAttribute("user") BaseUser std) {
+                           @SessionAttribute("user") BaseUser std,
+                           HttpServletResponse response) throws IOException {
         if (!(std instanceof Student)) {
             return "redirect:/seller/" + id;
         }
 
         List<Menu> menuList = menuRepository.selectMenuBySeller(id);
         List<MenuListDto> menus = menuList.stream().map(m -> new MenuListDto(m)).collect(Collectors.toList());
-
         model.addAttribute("form", menus);
         model.addAttribute("sellerId", id);
         return "/book/bookForm";
@@ -108,15 +129,17 @@ public class SellerController {
 
     @PostMapping("/{id}/book")
     public String addBook(@PathVariable("id") Long id, @RequestBody BookForm form,
-                          @SessionAttribute("user") BaseUser std) {
+                          HttpServletResponse response,
+                          @SessionAttribute("user") BaseUser std) throws IOException {
 
+        //TODO 메뉴 품절 체크
         List<BookedMenu> bookMenus = bookService.createBookMenus(form.returnArr());
-        Student student = (Student) std;
+        if(bookMenus == null)
+            response.sendError(500,"메뉴 오류");
 
+        Student student = (Student) std;
         bookService.createBook(bookMenus, student.getId(), id, form);
 
         return "redirect:/seller/" + id;
     }
-
-
 }
